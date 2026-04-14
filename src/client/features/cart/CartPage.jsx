@@ -4,8 +4,8 @@ import CartItem from './components/CartItem';
 import CartSummary, { VALID_COUPONS } from './components/CartSummary';
 import './styles/cart.css';
 
-const SHIPPING_FEE = 5.99;
-const FREE_SHIP_THRESHOLD = 50;
+const SHIPPING_FEE = 30000;
+const FREE_SHIP_THRESHOLD = 500000;
 
 const CartPage = ({ cartItems, onUpdateQty, onRemove, onContinueShopping }) => {
   const [couponCode, setCouponCode] = useState('');
@@ -25,11 +25,11 @@ const CartPage = ({ cartItems, onUpdateQty, onRemove, onContinueShopping }) => {
     const code = couponCode.toUpperCase().trim();
     if (VALID_COUPONS[code]) {
       setAppliedCoupon(code);
-      setCouponMsg(`✓ Áp dụng mã "${code}" thành công! Giảm ${VALID_COUPONS[code] * 100}%`);
+      setCouponMsg(<><i className="bi bi-check2"></i> Áp dụng mã "{code}" thành công! Giảm {VALID_COUPONS[code] * 100}%</>);
       setCouponStatus('success');
     } else {
       setAppliedCoupon(null);
-      setCouponMsg('✗ Mã giảm giá không hợp lệ.');
+      setCouponMsg(<><i className="bi bi-x-lg"></i> Mã giảm giá không hợp lệ.</>);
       setCouponStatus('error');
     }
   };
@@ -56,7 +56,7 @@ const CartPage = ({ cartItems, onUpdateQty, onRemove, onContinueShopping }) => {
             {/* Empty state */}
             {cartItems.length === 0 ? (
               <div className="cart-empty">
-                <div className="cart-empty__icon">🛒</div>
+                <div className="cart-empty__icon"><i className="bi bi-bag-x" style={{ fontSize: '3.5rem', display: 'block', marginBottom: '1rem' }}></i></div>
                 <p className="cart-empty__text">Giỏ hàng trống</p>
                 <button
                   id="btn-go-shopping"
@@ -85,10 +85,10 @@ const CartPage = ({ cartItems, onUpdateQty, onRemove, onContinueShopping }) => {
                     className="continue-btn"
                     onClick={onContinueShopping}
                   >
-                    ← Tiếp tục mua sắm
+                    <i className="bi bi-arrow-left" style={{ marginRight: '8px' }}></i>Tiếp tục mua sắm
                   </button>
                   <span className="free-ship-note">
-                    Miễn phí ship đơn từ ${FREE_SHIP_THRESHOLD} ✓
+                    Miễn phí ship đơn từ 500.000đ <i className="bi bi-check2" style={{ marginLeft: '4px' }}></i>
                   </span>
                 </div>
               </>

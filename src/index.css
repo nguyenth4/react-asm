@@ -2,7 +2,7 @@
    style.css — Blush & Bloom Global
    ======================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,600&family=Nunito:wght@300;400;500;600&display=swap');
+
 
 /* ── RESET ── */
 *,
@@ -19,7 +19,7 @@ html {
 }
 
 body {
-  font-family: 'Nunito', sans-serif;
+  font-family: 'Times New Roman', Times, serif;
   background: #FFF8F5;
   color: #3D1F2D;
   line-height: 1.6;
@@ -74,8 +74,8 @@ textarea {
   --admin-bg: #F5F6FA;
   --admin-sidebar: #1E1E2E;
   --admin-border: #E8ECF0;
-  --font-display: 'Playfair Display', serif;
-  --font-body: 'Nunito', sans-serif;
+  --font-display: 'Times New Roman', Times, serif;
+  --font-body: 'Times New Roman', Times, serif;
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
@@ -1307,7 +1307,7 @@ textarea {
   color: var(--pink-500);
   margin-top: 10px;
   border-top: 1px solid var(--pink-100);
-  pt: 15px;
+  
 }
 
 /* ── PAYMENT METHOD ── */

@@ -1,4 +1,5 @@
 import React from 'react';
+import { formatCurrency } from '../../../../shared/utils/format';
 
 const CartItem = ({ item, onUpdateQty, onRemove }) => {
   const { id, name, category, price, oldPrice, image, qty } = item;
@@ -44,10 +45,10 @@ const CartItem = ({ item, onUpdateQty, onRemove }) => {
         >
           🗑
         </button>
-        <div className="cart-item__price">${(price * qty).toFixed(2)}</div>
+        <div className="cart-item__price">{formatCurrency(price * qty)}</div>
         {oldPrice && (
           <div className="cart-item__price-old">
-            ${(oldPrice * qty).toFixed(2)}
+            {formatCurrency(oldPrice * qty)}
           </div>
         )}
       </div>

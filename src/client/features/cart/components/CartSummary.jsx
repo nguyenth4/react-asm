@@ -1,4 +1,5 @@
 import React from 'react';
+import { formatCurrency } from '../../../../shared/utils/format';
 
 const VALID_COUPONS = {
   BLOOM10: 0.10,
@@ -24,14 +25,14 @@ const CartSummary = ({
 
       <div className="summary-row">
         <span>Tạm tính</span>
-        <span id="subtotal-val">${subtotal.toFixed(2)}</span>
+        <span id="subtotal-val">{formatCurrency(subtotal)}</span>
       </div>
 
       {discount > 0 && (
         <div className="summary-row">
           <span>Giảm giá</span>
           <span id="discount-val" className="discount-val">
-            -${discount.toFixed(2)}
+            -{formatCurrency(discount)}
           </span>
         </div>
       )}
@@ -39,14 +40,14 @@ const CartSummary = ({
       <div className="summary-row">
         <span>Phí vận chuyển</span>
         <span id="ship-val">
-          {shippingFee === 0 ? 'Miễn phí ✓' : `$${shippingFee.toFixed(2)}`}
+          {shippingFee === 0 ? <>Miễn phí <i className="bi bi-check2"></i></> : formatCurrency(shippingFee)}
         </span>
       </div>
 
       <div className="summary-total">
         <span className="summary-total__label">Tổng cộng</span>
         <span className="summary-total__val" id="total-val">
-          ${total.toFixed(2)}
+          {formatCurrency(total)}
         </span>
       </div>
 

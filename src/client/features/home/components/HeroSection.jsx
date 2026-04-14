@@ -23,7 +23,7 @@ const HeroSection = ({ onShopClick }) => {
         </div>
       </div>
       <div className="hero__right">
-        <div className="hero__illustration">💄</div>
+        <div className="hero__illustration"><i className="bi bi-stars" style={{ fontSize: '4rem', color: 'var(--pink-200)' }}></i></div>
         <div className="hero__floating-card">
           <div className="hero__floating-card__icon">★</div>
           <div>

@@ -45,9 +45,9 @@ const LoginPage = ({ onNavigate }) => {
         <div className="auth-left__brand">Blush<span>&amp;</span>Bloom</div>
         <p className="auth-left__tagline">Chào mừng đến với thế giới làm đẹp —<br />nơi mỗi sắc màu kể một câu chuyện</p>
         <div className="auth-left__perks">
-          <div className="auth-perk">🎁 Tặng voucher 50K khi đăng ký</div>
-          <div className="auth-perk">⭐ Tích điểm mỗi đơn hàng</div>
-          <div className="auth-perk">🔔 Nhận ưu đãi độc quyền thành viên</div>
+          <div className="auth-perk"><i className="bi bi-gift" style={{ color: 'var(--pink-400)', marginRight: '6px' }}></i>Tặng voucher 50.000đ khi đăng ký</div>
+          <div className="auth-perk"><i className="bi bi-star-fill" style={{ color: 'var(--gold)', marginRight: '6px' }}></i>Tích điểm mỗi đơn hàng</div>
+          <div className="auth-perk"><i className="bi bi-bell" style={{ color: 'var(--gold)', marginRight: '6px' }}></i>Nhận ưu đãi độc quyền thành viên</div>
         </div>
       </div>
       <div className="auth-right">

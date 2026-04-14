@@ -31,16 +31,16 @@ const ProductFilter = () => {
         <span className="filter-title">Khoảng Giá</span>
         <div className="filter-list">
           <label className="filter-item">
-            <input type="checkbox" /> Dưới $30
+            <input type="checkbox" /> Dưới 300.000đ
           </label>
           <label className="filter-item">
-            <input type="checkbox" /> $30 - $60
+            <input type="checkbox" /> 300.000đ - 600.000đ
           </label>
           <label className="filter-item">
-            <input type="checkbox" /> $60 - $100
+            <input type="checkbox" /> 600.000đ - 1.000.000đ
           </label>
           <label className="filter-item">
-            <input type="checkbox" /> Trên $100
+            <input type="checkbox" /> Trên 1.000.000đ
           </label>
         </div>
       </div>

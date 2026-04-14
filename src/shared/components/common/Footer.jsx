@@ -17,10 +17,10 @@ const Footer = ({ onNavigate }) => {
             Cửa hàng mỹ phẩm cao cấp online hàng đầu Việt Nam. Chuyên son môi &amp; make-up chính hãng từ các thương hiệu nổi tiếng thế giới.
           </p>
           <div className="footer__socials">
-            <div className="footer__social-btn">f</div>
-            <div className="footer__social-btn">ig</div>
-            <div className="footer__social-btn">tt</div>
-            <div className="footer__social-btn">yt</div>
+            <div className="footer__social-btn"><i className="bi bi-facebook"></i></div>
+            <div className="footer__social-btn"><i className="bi bi-instagram"></i></div>
+            <div className="footer__social-btn"><i className="bi bi-tiktok"></i></div>
+            <div className="footer__social-btn"><i className="bi bi-youtube"></i></div>
           </div>
         </div>
         <div>

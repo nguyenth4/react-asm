@@ -66,10 +66,10 @@ const RegisterPage = ({ onNavigate }) => {
       <div className="auth-left">
         <div className="auth-left__brand">Blush<span>&amp;</span>Bloom</div>
         <p className="auth-left__tagline">Tạo tài khoản và nhận ngay<br />voucher 50K cho đơn hàng đầu tiên!</p>
-        <div className="auth-perk">🎁 Voucher 50K chào mừng</div>
-        <div className="auth-perk">⭐ Tích điểm mỗi đơn hàng</div>
-        <div className="auth-perk">🔔 Ưu đãi độc quyền thành viên</div>
-        <div className="auth-perk">🚚 Miễn phí ship từ 299K</div>
+        <div className="auth-perk"><i className="bi bi-gift" style={{ color: 'var(--pink-400)', marginRight: '6px' }}></i>Voucher 50.000đ chào mừng</div>
+        <div className="auth-perk"><i className="bi bi-star-fill" style={{ color: 'var(--gold)', marginRight: '6px' }}></i>Tích điểm mỗi đơn hàng</div>
+        <div className="auth-perk"><i className="bi bi-bell" style={{ color: 'var(--gold)', marginRight: '6px' }}></i>Ưu đãi độc quyền thành viên</div>
+        <div className="auth-perk"><i className="bi bi-truck" style={{ color: 'var(--green)', marginRight: '6px' }}></i>Miễn phí ship từ 300.000đ</div>
       </div>
       <div className="auth-right">
         <div className="auth-card">
@@ -77,8 +77,8 @@ const RegisterPage = ({ onNavigate }) => {
             <a className="auth-tab" onClick={() => onNavigate('login')}>Đăng nhập</a>
             <a className="auth-tab active" onClick={() => onNavigate('register')}>Đăng ký</a>
           </div>
-          <h2 className="auth-title">Tạo tài khoản mới ✨</h2>
-          <p className="auth-sub">Nhận ngay voucher 50K khi đăng ký!</p>
+          <h2 className="auth-title">Tạo tài khoản mới <i className="bi bi-stars" style={{ color: 'var(--gold)' }}></i></h2>
+          <p className="auth-sub">Nhận ngay voucher 50.000đ khi đăng ký!</p>
           
           <div style={{ display: 'flex', gap: '10px', marginBottom: '16px' }}>
             <button className="social-btn"><span style={{ fontSize: '18px', fontWeight: 700 }}>G</span> Google</button>

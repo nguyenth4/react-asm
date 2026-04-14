@@ -2,11 +2,11 @@ import React from 'react';
 
 const Categories = ({ onCategoryClick }) => {
   const cats = [
-    { id: 'lips', name: 'Son môi', icon: '💄', count: '128 sản phẩm', theme: 'cat--pink' },
-    { id: 'face', name: 'Má hồng', icon: '✨', count: '64 sản phẩm', theme: 'cat--gold' },
-    { id: 'eyes', name: 'Mắt & Kẻ mắt', icon: '👁️', count: '96 sản phẩm', theme: 'cat--blue' },
-    { id: 'skincare', name: 'Dưỡng da', icon: '🌿', count: '85 sản phẩm', theme: 'cat--green' },
-    { id: 'gift', name: 'Gift Set', icon: '🎁', count: '32 sản phẩm', theme: 'cat--purple' },
+    { id: 'lips', name: 'Son môi', icon: <i className="bi bi-palette"></i>, count: '128 sản phẩm', theme: 'cat--pink' },
+    { id: 'face', name: 'Má hồng', icon: <i className="bi bi-stars"></i>, count: '64 sản phẩm', theme: 'cat--gold' },
+    { id: 'eyes', name: 'Mắt & Kẻ mắt', icon: <i className="bi bi-eye"></i>, count: '96 sản phẩm', theme: 'cat--blue' },
+    { id: 'skincare', name: 'Dưỡng da', icon: <i className="bi bi-leaf"></i>, count: '85 sản phẩm', theme: 'cat--green' },
+    { id: 'gift', name: 'Gift Set', icon: <i className="bi bi-gift"></i>, count: '32 sản phẩm', theme: 'cat--purple' },
   ];
 
   return (

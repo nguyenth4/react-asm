@@ -79,10 +79,10 @@ const Header = ({ activePage, onNavigate, cartCount = 0 }) => {
       {/* Actions */}
       <div className="navbar__actions">
         <button className="navbar__icon-btn" title="Tìm kiếm" aria-label="Tìm kiếm">
-          🔍
+          <i className="bi bi-search"></i>
         </button>
         <button className="navbar__icon-btn" title="Tài khoản" aria-label="Tài khoản" onClick={() => onNavigate('login')}>
-          👤
+          <i className="bi bi-person"></i>
         </button>
 
         {/* Cart button với badge */}
@@ -94,7 +94,7 @@ const Header = ({ activePage, onNavigate, cartCount = 0 }) => {
           onClick={() => onNavigate('cart')}
           style={{ position: 'relative' }}
         >
-          🛒
+          <i className="bi bi-bag"></i>
           {cartCount > 0 && (
             <span className="navbar__badge">{cartCount}</span>
           )}

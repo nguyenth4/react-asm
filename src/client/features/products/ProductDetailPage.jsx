@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { formatCurrency } from '../../../shared/utils/format';
 import './styles/product-detail.css';
 
 const ProductDetailPage = ({ productId, onBack }) => {
@@ -10,7 +11,7 @@ const ProductDetailPage = ({ productId, onBack }) => {
     id: productId || 1,
     name: 'Velvet Rose Matte Lipstick',
     category: 'Lips',
-    price: 32.00,
+    price: 320000,
     oldPrice: null,
     rating: 4.8,
     reviews: 124,
@@ -72,9 +73,9 @@ const ProductDetailPage = ({ productId, onBack }) => {
           </div>
 
           <div className="product-price-large">
-            <span className="price">${product.price.toFixed(2)}</span>
+            <span className="price">{formatCurrency(product.price)}</span>
             {product.oldPrice && (
-              <span className="old-price">${product.oldPrice.toFixed(2)}</span>
+              <span className="old-price">{formatCurrency(product.oldPrice)}</span>
             )}
           </div>
 
@@ -89,14 +90,14 @@ const ProductDetailPage = ({ productId, onBack }) => {
               <button onClick={handleIncrease} className="btn-qty">+</button>
             </div>
             <button className="btn-add-to-cart-large">
-              Thêm vào giỏ - ${(product.price * quantity).toFixed(2)}
+              Thêm vào giỏ - {formatCurrency(product.price * quantity)}
             </button>
           </div>
 
           <div className="product-perks">
             <div className="perk">
-              <span className="perk-icon">🚚</span>
-              <span className="perk-text">Miễn phí giao hàng cho đơn từ $50</span>
+              <span className="perk-icon"><i className="bi bi-truck"></i></span>
+              <span className="perk-text">Miễn phí giao hàng cho đơn từ 500.000đ</span>
             </div>
             <div className="perk">
               <span className="perk-icon">↩️</span>
