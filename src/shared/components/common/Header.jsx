@@ -81,7 +81,7 @@ const Header = ({ activePage, onNavigate, cartCount = 0 }) => {
         <button className="navbar__icon-btn" title="Tìm kiếm" aria-label="Tìm kiếm">
           🔍
         </button>
-        <button className="navbar__icon-btn" title="Tài khoản" aria-label="Tài khoản">
+        <button className="navbar__icon-btn" title="Tài khoản" aria-label="Tài khoản" onClick={() => onNavigate('login')}>
           👤
         </button>
 
@@ -100,7 +100,7 @@ const Header = ({ activePage, onNavigate, cartCount = 0 }) => {
           )}
         </button>
 
-        <button className="btn-register">Đăng ký</button>
+        <button className="btn-register" onClick={() => onNavigate('register')}>Đăng ký</button>
       </div>
     </nav>
   );

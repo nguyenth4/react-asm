@@ -6,6 +6,8 @@ import ProductsPage from './client/features/products/ProductsPage';
 import ProductDetailPage from './client/features/products/ProductDetailPage';
 import CartPage from './client/features/cart/CartPage';
 import CheckoutPage from './client/features/checkout/CheckoutPage';
+import LoginPage from './client/features/auth/LoginPage';
+import RegisterPage from './client/features/auth/RegisterPage';
 import './index.css';
 
 function App() {
@@ -92,6 +94,10 @@ function App() {
         return (
           <CheckoutPage onNavigate={navigateTo} />
         );
+      case 'login':
+        return <LoginPage onNavigate={navigateTo} />;
+      case 'register':
+        return <RegisterPage onNavigate={navigateTo} />;
       default:
         return (
           <HomePage
