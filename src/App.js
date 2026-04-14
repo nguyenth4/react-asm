@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import Header from './shared/components/common/Header';
+import Footer from './shared/components/common/Footer';
 import HomePage from './client/features/home/HomePage';
 import ProductsPage from './client/features/products/ProductsPage';
 import ProductDetailPage from './client/features/products/ProductDetailPage';
@@ -13,6 +15,7 @@ function App() {
     if (productId !== null) {
       setSelectedProductId(productId);
     }
+    window.scrollTo(0, 0);
   };
 
   const renderPage = () => {
@@ -44,7 +47,11 @@ function App() {
 
   return (
     <div className="App">
-      {renderPage()}
+      <Header activePage={currentPage} onNavigate={navigateTo} />
+      <main>
+        {renderPage()}
+      </main>
+      <Footer onNavigate={navigateTo} />
     </div>
   );
 }
