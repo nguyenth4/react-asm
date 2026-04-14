@@ -1,21 +1,50 @@
 import React, { useState } from 'react';
+import HomePage from './client/features/home/HomePage';
 import ProductsPage from './client/features/products/ProductsPage';
 import ProductDetailPage from './client/features/products/ProductDetailPage';
 import './index.css';
 
 function App() {
+  const [currentPage, setCurrentPage] = useState('home'); // 'home' | 'products' | 'detail'
   const [selectedProductId, setSelectedProductId] = useState(null);
+
+  const navigateTo = (page, productId = null) => {
+    setCurrentPage(page);
+    if (productId !== null) {
+      setSelectedProductId(productId);
+    }
+  };
+
+  const renderPage = () => {
+    switch (currentPage) {
+      case 'home':
+        return (
+          <HomePage 
+            onShopClick={() => navigateTo('products')}
+            onProductClick={(id) => navigateTo('detail', id)}
+          />
+        );
+      case 'products':
+        return (
+          <ProductsPage 
+            onProductClick={(id) => navigateTo('detail', id)} 
+          />
+        );
+      case 'detail':
+        return (
+          <ProductDetailPage 
+            productId={selectedProductId} 
+            onBack={() => navigateTo('products')} 
+          />
+        );
+      default:
+        return <HomePage onShopClick={() => navigateTo('products')} onProductClick={(id) => navigateTo('detail', id)} />;
+    }
+  };
 
   return (
     <div className="App">
-      {selectedProductId ? (
-        <ProductDetailPage 
-          productId={selectedProductId} 
-          onBack={() => setSelectedProductId(null)} 
-        />
-      ) : (
-        <ProductsPage onProductClick={(id) => setSelectedProductId(id)} />
-      )}
+      {renderPage()}
     </div>
   );
 }
