@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Header from './shared/components/common/Header';
+import Footer from './shared/components/common/Footer';
 import HomePage from './client/features/home/HomePage';
 import ProductsPage from './client/features/products/ProductsPage';
 import ProductDetailPage from './client/features/products/ProductDetailPage';
@@ -105,6 +106,7 @@ function App() {
         cartCount={cartCount}
       />
       {renderPage()}
+      <Footer onNavigate={navigateTo} />
     </div>
   );
 }

@@ -56,7 +56,7 @@ const Footer = ({ onNavigate }) => {
       <div className="footer__bottom">
         <span className="footer__copy">© 2026 Blush &amp; Bloom. Bảo lưu mọi quyền.</span>
         <span className="footer__contact">Hotline: <strong>1800 1234</strong> · contact@blushbloom.vn</span>
-        <div class="footer__payments">
+        <div className="footer__payments">
           <span className="footer__pay-badge">VISA</span>
           <span className="footer__pay-badge">Master</span>
           <span className="footer__pay-badge">MoMo</span>
