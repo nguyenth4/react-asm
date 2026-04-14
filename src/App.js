@@ -5,6 +5,7 @@ import HomePage from './client/features/home/HomePage';
 import ProductsPage from './client/features/products/ProductsPage';
 import ProductDetailPage from './client/features/products/ProductDetailPage';
 import CartPage from './client/features/cart/CartPage';
+import CheckoutPage from './client/features/checkout/CheckoutPage';
 import './index.css';
 
 function App() {
@@ -86,6 +87,10 @@ function App() {
             onRemove={removeFromCart}
             onContinueShopping={() => navigateTo('products')}
           />
+        );
+      case 'checkout':
+        return (
+          <CheckoutPage onNavigate={navigateTo} />
         );
       default:
         return (

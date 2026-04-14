@@ -69,6 +69,11 @@ const Header = ({ activePage, onNavigate, cartCount = 0 }) => {
             Thương hiệu
           </a>
         </li>
+        <li>
+          <a href="/checkout" onClick={(e) => handleNav(e, 'checkout')} className={activePage === 'checkout' ? 'active' : ''}>
+            Thanh toán
+          </a>
+        </li>
       </ul>
 
       {/* Actions */}
