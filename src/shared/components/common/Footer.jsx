@@ -1,15 +1,20 @@
 import React from 'react';
 
 const Footer = ({ onNavigate }) => {
+  const handleNav = (e, page) => {
+    e.preventDefault();
+    onNavigate(page);
+  };
+
   return (
     <footer className="footer">
       <div className="footer__main">
         <div>
-          <div className="footer__logo" onClick={() => onNavigate && onNavigate('home')}>
-            Blush<span>&</span>Bloom
+          <div className="footer__logo" onClick={() => onNavigate('home')} style={{ cursor: 'pointer' }}>
+            Blush<span>&amp;</span>Bloom
           </div>
           <p className="footer__desc">
-            Cửa hàng mỹ phẩm cao cấp online hàng đầu Việt Nam. Chuyên son môi & make-up chính hãng từ các thương hiệu nổi tiếng thế giới.
+            Cửa hàng mỹ phẩm cao cấp online hàng đầu Việt Nam. Chuyên son môi &amp; make-up chính hãng từ các thương hiệu nổi tiếng thế giới.
           </p>
           <div className="footer__socials">
             <div className="footer__social-btn">f</div>
@@ -21,37 +26,37 @@ const Footer = ({ onNavigate }) => {
         <div>
           <div className="footer__col-title">Sản phẩm</div>
           <div className="footer__links">
-            <button onClick={() => onNavigate && onNavigate('products')}>Son môi</button>
-            <button onClick={() => onNavigate && onNavigate('products')}>Phấn má</button>
-            <button onClick={() => onNavigate && onNavigate('products')}>Mắt</button>
-            <button onClick={() => onNavigate && onNavigate('products')}>Dưỡng da</button>
-            <button onClick={() => onNavigate && onNavigate('products')}>Gift Set</button>
+            <a href="/products" onClick={(e) => handleNav(e, 'products')}>Son môi</a>
+            <a href="/products" onClick={(e) => handleNav(e, 'products')}>Phấn má</a>
+            <a href="/products" onClick={(e) => handleNav(e, 'products')}>Mắt</a>
+            <a href="/products" onClick={(e) => handleNav(e, 'products')}>Dưỡng da</a>
+            <a href="/products" onClick={(e) => handleNav(e, 'products')}>Gift Set</a>
           </div>
         </div>
         <div>
           <div className="footer__col-title">Hỗ trợ</div>
           <div className="footer__links">
-            <a href="#">Hướng dẫn mua hàng</a>
-            <a href="#">Chính sách đổi trả</a>
-            <a href="#">Vận chuyển</a>
-            <a href="#">Tích điểm</a>
-            <a href="#">Liên hệ</a>
+            <a href="#!" onClick={(e) => e.preventDefault()}>Hướng dẫn mua hàng</a>
+            <a href="#!" onClick={(e) => e.preventDefault()}>Chính sách đổi trả</a>
+            <a href="#!" onClick={(e) => e.preventDefault()}>Vận chuyển</a>
+            <a href="#!" onClick={(e) => e.preventDefault()}>Tích điểm</a>
+            <a href="#!" onClick={(e) => e.preventDefault()}>Liên hệ</a>
           </div>
         </div>
         <div>
           <div className="footer__col-title">Công ty</div>
           <div className="footer__links">
-            <a href="#">Về chúng tôi</a>
-            <a href="#">Blog làm đẹp</a>
-            <a href="#">Thương hiệu</a>
-            <a href="#">Tuyển dụng</a>
+            <a href="#!" onClick={(e) => e.preventDefault()}>Về chúng tôi</a>
+            <a href="#!" onClick={(e) => e.preventDefault()}>Blog làm đẹp</a>
+            <a href="#!" onClick={(e) => e.preventDefault()}>Thương hiệu</a>
+            <a href="#!" onClick={(e) => e.preventDefault()}>Tuyển dụng</a>
           </div>
         </div>
       </div>
       <div className="footer__bottom">
-        <span className="footer__copy">© 2026 Blush & Bloom. Bảo lưu mọi quyền.</span>
+        <span className="footer__copy">© 2026 Blush &amp; Bloom. Bảo lưu mọi quyền.</span>
         <span className="footer__contact">Hotline: <strong>1800 1234</strong> · contact@blushbloom.vn</span>
-        <div className="footer__payments">
+        <div class="footer__payments">
           <span className="footer__pay-badge">VISA</span>
           <span className="footer__pay-badge">Master</span>
           <span className="footer__pay-badge">MoMo</span>
@@ -59,22 +64,6 @@ const Footer = ({ onNavigate }) => {
           <span className="footer__pay-badge">COD</span>
         </div>
       </div>
-      <style jsx>{`
-        .footer__links button {
-          font-family: inherit;
-          background: none;
-          border: none;
-          padding: 0;
-          font-size: 13px;
-          color: rgba(255,255,255,.65);
-          transition: color .2s;
-          cursor: pointer;
-          text-align: left;
-        }
-        .footer__links button:hover {
-          color: var(--pink-200);
-        }
-      `}</style>
     </footer>
   );
 };
