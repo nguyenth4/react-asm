@@ -1,0 +1,159 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "Velvet Rose Matte Lipstick",
+      "brand": "MAC Cosmetics",
+      "category": "lips",
+      "price": 320000,
+      "originalPrice": 400000,
+      "image": "https://images.unsplash.com/photo-1586495777744-4413f21062fa?q=80&w=800&auto=format&fit=crop",
+      "isNew": true,
+      "isSale": false,
+      "rating": 4.9,
+      "reviewCount": 342,
+      "soldCount": 2800,
+      "stock": 5
+    },
+    {
+      "id": 2,
+      "name": "Signature Floral Eau de Parfum",
+      "brand": "Dior Beauty",
+      "category": "fragrance",
+      "price": 1150000,
+      "originalPrice": 1450000,
+      "image": "https://images.unsplash.com/photo-1594035910387-fea4772749d5?q=80&w=800&auto=format&fit=crop",
+      "isNew": false,
+      "isSale": true,
+      "rating": 4.8,
+      "reviewCount": 218,
+      "soldCount": 1900,
+      "stock": 64
+    },
+    {
+      "id": 3,
+      "name": "Luminous Hydration Serum",
+      "brand": "NARS Cosmetics",
+      "category": "skincare",
+      "price": 680000,
+      "originalPrice": null,
+      "image": "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?q=80&w=800&auto=format&fit=crop",
+      "isNew": false,
+      "isSale": false,
+      "rating": 4.9,
+      "reviewCount": 189,
+      "soldCount": 1200,
+      "stock": 12
+    },
+    {
+      "id": 4,
+      "name": "Mineral Radiance Day Cream",
+      "brand": "YSL Beauty",
+      "category": "skincare",
+      "price": 540000,
+      "originalPrice": null,
+      "image": "https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?q=80&w=800&auto=format&fit=crop",
+      "isNew": true,
+      "isSale": false,
+      "rating": 4.8,
+      "reviewCount": 276,
+      "soldCount": 760,
+      "stock": 27
+    },
+    {
+      "id": 5,
+      "name": "Desert Sunset Eyeshadow Palette",
+      "brand": "Charlotte Tilbury",
+      "category": "eyes",
+      "price": 450000,
+      "originalPrice": 650000,
+      "image": "https://images.unsplash.com/photo-1512496015851-a1c8ce56cf46?q=80&w=800&auto=format&fit=crop",
+      "isNew": true,
+      "isSale": true,
+      "rating": 4.9,
+      "reviewCount": 523,
+      "soldCount": 523,
+      "stock": 18
+    }
+  ],
+  "categories": [
+    {
+      "id": "lips",
+      "name": "Son môi"
+    },
+    {
+      "id": "face",
+      "name": "Má hồng"
+    },
+    {
+      "id": "eyes",
+      "name": "Mắt & Kẻ mắt"
+    },
+    {
+      "id": "skincare",
+      "name": "Dưỡng da"
+    },
+    {
+      "id": "gift",
+      "name": "Gift Set"
+    }
+  ],
+  "users": [
+    {
+      "id": 1,
+      "username": "admin",
+      "password": "password123",
+      "role": "admin",
+      "name": "Quản Trị Viên",
+      "email": "admin@blushbloom.vn",
+      "phone": "0988888888"
+    },
+    {
+      "id": 2,
+      "username": "kieubien",
+      "password": "password123",
+      "role": "customer",
+      "name": "Kiều Biên",
+      "email": "kieu.bien@gmail.com",
+      "phone": "0912345678"
+    }
+  ],
+  "orders": [
+    {
+      "id": "BB2601",
+      "userId": 2,
+      "customerName": "Kiều Biên",
+      "customerPhone": "0912345678",
+      "items": [
+        {
+          "productId": 1,
+          "productName": "Velvet Rose Matte Lipstick",
+          "quantity": 2,
+          "price": 320000
+        }
+      ],
+      "total": 640000,
+      "paymentMethod": "MoMo",
+      "status": "done",
+      "createdAt": "2026-03-18T09:14:00Z"
+    },
+    {
+      "id": "BB2600",
+      "userId": null,
+      "customerName": "Trần Minh Thư",
+      "customerPhone": "0987654321",
+      "items": [
+        {
+          "productId": 2,
+          "productName": "Signature Floral Eau de Parfum",
+          "quantity": 1,
+          "price": 1150000
+        }
+      ],
+      "total": 1150000,
+      "paymentMethod": "VISA",
+      "status": "shipping",
+      "createdAt": "2026-03-18T08:30:00Z"
+    }
+  ]
+}
