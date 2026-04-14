@@ -36,10 +36,7 @@ const ProductDetailPage = ({ productId, onBack }) => {
     <div className="product-detail-layout">
       {/* Nút quay lại */}
       <button className="btn-back" onClick={onBack}>
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <line x1="19" y1="12" x2="5" y2="12"></line>
-          <polyline points="12 19 5 12 12 5"></polyline>
-        </svg>
+        <i className="bi bi-arrow-left" style={{ marginRight: '8px' }}></i>
         Quay lại danh sách
       </button>
 
@@ -65,7 +62,13 @@ const ProductDetailPage = ({ productId, onBack }) => {
           
           <div className="product-meta">
             <div className="product-rating">
-              <span className="stars">★★★★★</span>
+              <span className="stars">
+                <i className="bi bi-star-fill"></i>
+                <i className="bi bi-star-fill"></i>
+                <i className="bi bi-star-fill"></i>
+                <i className="bi bi-star-fill"></i>
+                <i className="bi bi-star-fill"></i>
+              </span>
               <span className="rating-value">{product.rating}</span>
               <span className="review-count">({product.reviews} đánh giá)</span>
             </div>
@@ -100,7 +103,7 @@ const ProductDetailPage = ({ productId, onBack }) => {
               <span className="perk-text">Miễn phí giao hàng cho đơn từ 500.000đ</span>
             </div>
             <div className="perk">
-              <span className="perk-icon">↩️</span>
+              <span className="perk-icon"><i className="bi bi-arrow-counterclockwise"></i></span>
               <span className="perk-text">Đổi trả miễn phí trong 30 ngày</span>
             </div>
           </div>

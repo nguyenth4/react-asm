@@ -43,7 +43,7 @@ const CartItem = ({ item, onUpdateQty, onRemove }) => {
           aria-label="Xóa sản phẩm"
           title="Xóa"
         >
-          🗑
+          <i className="bi bi-trash"></i>
         </button>
         <div className="cart-item__price">{formatCurrency(price * qty)}</div>
         {oldPrice && (

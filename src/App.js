@@ -1,22 +1,21 @@
 import React, { useState } from 'react';
-import Header from './shared/components/common/Header';
-import Footer from './shared/components/common/Footer';
-import HomePage from './client/features/home/HomePage';
-import ProductsPage from './client/features/products/ProductsPage';
-import ProductDetailPage from './client/features/products/ProductDetailPage';
-import CartPage from './client/features/cart/CartPage';
-import CheckoutPage from './client/features/checkout/CheckoutPage';
-import LoginPage from './client/features/auth/LoginPage';
-import RegisterPage from './client/features/auth/RegisterPage';
+import ClientApp from './client/ClientApp';
+import AdminApp from './admin/AdminApp';
 import './index.css';
 
 function App() {
-  const [currentPage, setCurrentPage] = useState('home'); // 'home' | 'products' | 'detail' | 'cart'
+  const [currentPage, setCurrentPage] = useState(() => {
+    // Nếu URL có /admin thì mặc định vào Dashboard
+    if (window.location.pathname.includes('/admin')) {
+      return 'admin_dashboard';
+    }
+    return 'home';
+  });
+  
   const [selectedProductId, setSelectedProductId] = useState(null);
-
-  // ── Cart state ──────────────────────────────────────────
   const [cartItems, setCartItems] = useState([]);
 
+  // ── Cart logic ──────────────────────────────────────────
   const addToCart = (product) => {
     setCartItems((prev) => {
       const existing = prev.find((item) => item.id === product.id);
@@ -45,7 +44,7 @@ function App() {
     setCartItems((prev) => prev.filter((item) => item.id !== productId));
   };
 
-  // ── Navigation ──────────────────────────────────────────
+  // ── Navigation logic ──────────────────────────────────────────
   const navigateTo = (page, productId = null) => {
     setCurrentPage(page);
     if (productId !== null) {
@@ -53,71 +52,26 @@ function App() {
     }
   };
 
-  const cartCount = cartItems.reduce((sum, item) => sum + item.qty, 0);
-
-  // ── Page render ──────────────────────────────────────────
-  const renderPage = () => {
-    switch (currentPage) {
-      case 'home':
-        return (
-          <HomePage
-            onShopClick={() => navigateTo('products')}
-            onProductClick={(id) => navigateTo('detail', id)}
-            onAddToCart={addToCart}
-          />
-        );
-      case 'products':
-        return (
-          <ProductsPage
-            onProductClick={(id) => navigateTo('detail', id)}
-            onAddToCart={addToCart}
-          />
-        );
-      case 'detail':
-        return (
-          <ProductDetailPage
-            productId={selectedProductId}
-            onBack={() => navigateTo('products')}
-            onAddToCart={addToCart}
-          />
-        );
-      case 'cart':
-        return (
-          <CartPage
-            cartItems={cartItems}
-            onUpdateQty={updateQty}
-            onRemove={removeFromCart}
-            onContinueShopping={() => navigateTo('products')}
-          />
-        );
-      case 'checkout':
-        return (
-          <CheckoutPage onNavigate={navigateTo} />
-        );
-      case 'login':
-        return <LoginPage onNavigate={navigateTo} />;
-      case 'register':
-        return <RegisterPage onNavigate={navigateTo} />;
-      default:
-        return (
-          <HomePage
-            onShopClick={() => navigateTo('products')}
-            onProductClick={(id) => navigateTo('detail', id)}
-            onAddToCart={addToCart}
-          />
-        );
-    }
-  };
+  const isAdminPage = currentPage && currentPage.startsWith('admin_');
 
   return (
     <div className="App">
-      <Header
-        activePage={currentPage}
-        onNavigate={navigateTo}
-        cartCount={cartCount}
-      />
-      {renderPage()}
-      <Footer onNavigate={navigateTo} />
+      {isAdminPage ? (
+        <AdminApp 
+          currentPage={currentPage} 
+          onNavigate={navigateTo} 
+        />
+      ) : (
+        <ClientApp 
+          currentPage={currentPage} 
+          onNavigate={navigateTo}
+          cartItems={cartItems}
+          addToCart={addToCart}
+          updateQty={updateQty}
+          removeFromCart={removeFromCart}
+          selectedProductId={selectedProductId}
+        />
+      )}
     </div>
   );
 }

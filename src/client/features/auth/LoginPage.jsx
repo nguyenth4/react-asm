@@ -23,8 +23,8 @@ const LoginPage = ({ onNavigate }) => {
     // Mock login logic
     if (trimmedEmail === 'admin@blushbloom.vn' && trimmedPass === 'admin123') {
       localStorage.setItem('bb_user', JSON.stringify({ name: 'Kiều Biên', role: 'admin', email: trimmedEmail }));
-      // redirect to home for now (no admin dash yet in react)
-      onNavigate('home');
+      // redirect to admin dashboard
+      onNavigate('admin_dashboard');
     } else if (trimmedEmail === 'lananh@email.com' && trimmedPass === 'user123') {
       localStorage.setItem('bb_user', JSON.stringify({ name: 'Nguyễn Lan Anh', role: 'user', email: trimmedEmail }));
       onNavigate('home');
@@ -56,12 +56,12 @@ const LoginPage = ({ onNavigate }) => {
             <a className="auth-tab active" onClick={() => onNavigate('login')}>Đăng nhập</a>
             <a className="auth-tab" onClick={() => onNavigate('register')}>Đăng ký</a>
           </div>
-          <h2 className="auth-title">Chào mừng trở lại 👋</h2>
+          <h2 className="auth-title">Chào mừng trở lại <i className="bi bi-emoji-smile" style={{ color: 'var(--pink-400)' }}></i></h2>
           <p className="auth-sub">Đăng nhập để tiếp tục mua sắm nhé!</p>
           
           <div className="social-btns">
-            <button className="social-btn"><span style={{ fontSize: '18px', fontWeight: 700 }}>G</span> Google</button>
-            <button className="social-btn"><span style={{ fontSize: '18px', fontWeight: 700 }}>f</span> Facebook</button>
+            <button className="social-btn"><i className="bi bi-google" style={{ marginRight: '8px' }}></i> Google</button>
+            <button className="social-btn"><i className="bi bi-facebook" style={{ marginRight: '8px' }}></i> Facebook</button>
           </div>
           
           <div className="divider">
@@ -96,7 +96,9 @@ const LoginPage = ({ onNavigate }) => {
                 onChange={(e) => setPassword(e.target.value)}
                 onKeyDown={handleKeyDown}
               />
-              <button className="toggle-pw" onClick={togglePw}>👁</button>
+              <button className="toggle-pw" onClick={togglePw}>
+                <i className={`bi ${showPassword ? 'bi-eye-slash' : 'bi-eye'}`}></i>
+              </button>
             </div>
           </div>
 
@@ -104,7 +106,7 @@ const LoginPage = ({ onNavigate }) => {
             <a className="forgot-link" href="#!">Quên mật khẩu?</a>
           </div>
 
-          <button className="btn-submit" onClick={doLogin}>Đăng nhập →</button>
+          <button className="btn-submit" onClick={doLogin}>Đăng nhập <i className="bi bi-arrow-right" style={{ marginLeft: '8px' }}></i></button>
           
           <p className="auth-switch">Chưa có tài khoản? <a onClick={() => onNavigate('register')}>Đăng ký ngay</a></p>
         </div>

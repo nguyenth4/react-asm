@@ -55,7 +55,7 @@ const RegisterPage = ({ onNavigate }) => {
     }
 
     localStorage.setItem('bb_user', JSON.stringify({ name: `${fn} ${ln}`, role: 'user', email: em }));
-    setSuccessMsg(`Đăng ký thành công! 🎉 Chào mừng ${fn}!`);
+    setSuccessMsg(`Đăng ký thành công! Chào mừng ${fn}!`);
     setTimeout(() => {
       onNavigate('home');
     }, 1500);
@@ -81,8 +81,8 @@ const RegisterPage = ({ onNavigate }) => {
           <p className="auth-sub">Nhận ngay voucher 50.000đ khi đăng ký!</p>
           
           <div style={{ display: 'flex', gap: '10px', marginBottom: '16px' }}>
-            <button className="social-btn"><span style={{ fontSize: '18px', fontWeight: 700 }}>G</span> Google</button>
-            <button className="social-btn"><span style={{ fontSize: '18px', fontWeight: 700 }}>f</span> Facebook</button>
+            <button className="social-btn"><i className="bi bi-google" style={{ marginRight: '8px' }}></i> Google</button>
+            <button className="social-btn"><i className="bi bi-facebook" style={{ marginRight: '8px' }}></i> Facebook</button>
           </div>
           
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
@@ -130,7 +130,9 @@ const RegisterPage = ({ onNavigate }) => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
-              <button className="toggle-pw" onClick={togglePw}>👁</button>
+              <button className="toggle-pw" onClick={togglePw}>
+                <i className={`bi ${showPassword ? 'bi-eye-slash' : 'bi-eye'}`}></i>
+              </button>
             </div>
             {password && (
               <div className="strength-bar">
@@ -157,7 +159,7 @@ const RegisterPage = ({ onNavigate }) => {
             <label htmlFor="newsletter">Nhận thông báo ưu đãi &amp; sản phẩm mới qua email</label>
           </div>
           
-          <button className="btn-submit" onClick={doRegister}>Đăng ký miễn phí →</button>
+          <button className="btn-submit" onClick={doRegister}>Đăng ký miễn phí <i className="bi bi-arrow-right" style={{ marginLeft: '8px' }}></i></button>
           <p className="auth-switch">Đã có tài khoản? <a onClick={() => onNavigate('login')}>Đăng nhập</a></p>
         </div>
       </div>

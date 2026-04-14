@@ -53,15 +53,19 @@ const CartSummary = ({
 
       {/* Coupon inside summary */}
       <div className="coupon-row">
-        <input
-          id="coupon-input"
-          className="coupon-input"
-          type="text"
-          placeholder="🎟 Nhập mã giảm giá..."
-          value={couponCode}
-          onChange={(e) => onCouponChange(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && onApplyCoupon()}
-        />
+        <div className="coupon-input-wrap" style={{ position: 'relative', flex: 1 }}>
+          <i className="bi bi-ticket-perforated" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-soft)' }}></i>
+          <input
+            id="coupon-input"
+            className="coupon-input"
+            type="text"
+            placeholder="Nhập mã giảm giá..."
+            style={{ paddingLeft: '36px' }}
+            value={couponCode}
+            onChange={(e) => onCouponChange(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && onApplyCoupon()}
+          />
+        </div>
         <button id="coupon-apply-btn" className="coupon-btn" onClick={onApplyCoupon}>
           Áp dụng
         </button>
@@ -72,10 +76,10 @@ const CartSummary = ({
       )}
 
       <button id="checkout-btn" className="btn-checkout" onClick={onCheckout}>
-        Đặt hàng ngay →
+        Đặt hàng ngay <i className="bi bi-arrow-right" style={{ marginLeft: '8px' }}></i>
       </button>
 
-      <p className="secure-note">🔒 Thanh toán được bảo mật SSL</p>
+      <p className="secure-note"><i className="bi bi-shield-lock-fill" style={{ marginRight: '6px' }}></i> Thanh toán được bảo mật SSL</p>
 
       <div className="pay-icons">
         {['VISA', 'Master', 'MoMo', 'ZaloPay', 'COD'].map((m) => (

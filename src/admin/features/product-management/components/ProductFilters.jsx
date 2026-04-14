@@ -1,0 +1,55 @@
+import React from 'react';
+
+const ProductFilters = ({ searchTerm, onSearchChange, filters, onFilterChange, onAddClick }) => {
+  return (
+    <div className="filter-bar">
+      <input 
+        type="text" 
+        className="fsel" 
+        style={{ width: '200px' }} 
+        placeholder="Tìm tên, SKU..." 
+        value={searchTerm} 
+        onChange={(e) => onSearchChange(e.target.value)} 
+      />
+      
+      <select 
+        className="fsel" 
+        value={filters.category} 
+        onChange={(e) => onFilterChange({ ...filters, category: e.target.value })}
+      >
+        <option value="">Tất cả danh mục</option>
+        <option value="Son môi">Son môi</option>
+        <option value="Phấn má">Phấn má</option>
+        <option value="Mắt">Mắt</option>
+        <option value="Dưỡng da">Dưỡng da</option>
+      </select>
+      
+      <select 
+        className="fsel" 
+        value={filters.status} 
+        onChange={(e) => onFilterChange({ ...filters, status: e.target.value })}
+      >
+        <option value="">Tất cả trạng thái</option>
+        <option value="active">Đang bán</option>
+        <option value="hidden">Tạm ẩn</option>
+      </select>
+      
+      <select 
+        className="fsel" 
+        value={filters.sort} 
+        onChange={(e) => onFilterChange({ ...filters, sort: e.target.value })}
+      >
+        <option value="newest">Mới nhất</option>
+        <option value="bestseller">Bán chạy</option>
+        <option value="price_asc">Giá tăng</option>
+        <option value="price_desc">Giá giảm</option>
+        <option value="stock_asc">Tồn kho ít</option>
+      </select>
+      
+      <div style={{ flex: 1 }}></div>
+      <button className="btn-add" onClick={onAddClick}>+ Thêm sản phẩm</button>
+    </div>
+  );
+};
+
+export default ProductFilters;
