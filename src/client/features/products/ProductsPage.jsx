@@ -5,7 +5,7 @@ import './styles/products.css';
 
 import { MOCK_PRODUCTS } from '../../../shared/constants/mockProducts';
 
-const ProductsPage = ({ onProductClick }) => {
+const ProductsPage = ({ onProductClick, onAddToCart }) => {
   const [products] = useState(MOCK_PRODUCTS);
 
   return (
@@ -20,7 +20,7 @@ const ProductsPage = ({ onProductClick }) => {
           <span className="products-count">{products.length} sản phẩm</span>
         </div>
         
-        <ProductList products={products} onProductClick={onProductClick} />
+        <ProductList products={products} onProductClick={onProductClick} onAddToCart={onAddToCart} />
       </main>
     </div>
   );

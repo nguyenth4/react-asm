@@ -1,6 +1,6 @@
 import React from 'react';
 
-const ProductCard = ({ product, onClick }) => {
+const ProductCard = ({ product, onClick, onAddToCart }) => {
   const { name, category, price, oldPrice, image, isNew, isSale } = product;
   
   return (
@@ -28,7 +28,7 @@ const ProductCard = ({ product, onClick }) => {
           className="btn-add-cart" 
           onClick={(e) => {
             e.stopPropagation();
-            alert(`Đã thêm ${name} vào giỏ hàng!`);
+            if (onAddToCart) onAddToCart(product);
           }}
         >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

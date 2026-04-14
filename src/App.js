@@ -1,57 +1,110 @@
 import React, { useState } from 'react';
 import Header from './shared/components/common/Header';
-import Footer from './shared/components/common/Footer';
 import HomePage from './client/features/home/HomePage';
 import ProductsPage from './client/features/products/ProductsPage';
 import ProductDetailPage from './client/features/products/ProductDetailPage';
+import CartPage from './client/features/cart/CartPage';
 import './index.css';
 
 function App() {
-  const [currentPage, setCurrentPage] = useState('home'); // 'home' | 'products' | 'detail'
+  const [currentPage, setCurrentPage] = useState('home'); // 'home' | 'products' | 'detail' | 'cart'
   const [selectedProductId, setSelectedProductId] = useState(null);
 
+  // ── Cart state ──────────────────────────────────────────
+  const [cartItems, setCartItems] = useState([]);
+
+  const addToCart = (product) => {
+    setCartItems((prev) => {
+      const existing = prev.find((item) => item.id === product.id);
+      if (existing) {
+        return prev.map((item) =>
+          item.id === product.id ? { ...item, qty: item.qty + 1 } : item
+        );
+      }
+      return [...prev, { ...product, qty: 1 }];
+    });
+  };
+
+  const updateQty = (productId, newQty) => {
+    if (newQty <= 0) {
+      removeFromCart(productId);
+      return;
+    }
+    setCartItems((prev) =>
+      prev.map((item) =>
+        item.id === productId ? { ...item, qty: newQty } : item
+      )
+    );
+  };
+
+  const removeFromCart = (productId) => {
+    setCartItems((prev) => prev.filter((item) => item.id !== productId));
+  };
+
+  // ── Navigation ──────────────────────────────────────────
   const navigateTo = (page, productId = null) => {
     setCurrentPage(page);
     if (productId !== null) {
       setSelectedProductId(productId);
     }
-    window.scrollTo(0, 0);
   };
 
+  const cartCount = cartItems.reduce((sum, item) => sum + item.qty, 0);
+
+  // ── Page render ──────────────────────────────────────────
   const renderPage = () => {
     switch (currentPage) {
       case 'home':
         return (
-          <HomePage 
+          <HomePage
             onShopClick={() => navigateTo('products')}
             onProductClick={(id) => navigateTo('detail', id)}
+            onAddToCart={addToCart}
           />
         );
       case 'products':
         return (
-          <ProductsPage 
-            onProductClick={(id) => navigateTo('detail', id)} 
+          <ProductsPage
+            onProductClick={(id) => navigateTo('detail', id)}
+            onAddToCart={addToCart}
           />
         );
       case 'detail':
         return (
-          <ProductDetailPage 
-            productId={selectedProductId} 
-            onBack={() => navigateTo('products')} 
+          <ProductDetailPage
+            productId={selectedProductId}
+            onBack={() => navigateTo('products')}
+            onAddToCart={addToCart}
+          />
+        );
+      case 'cart':
+        return (
+          <CartPage
+            cartItems={cartItems}
+            onUpdateQty={updateQty}
+            onRemove={removeFromCart}
+            onContinueShopping={() => navigateTo('products')}
           />
         );
       default:
-        return <HomePage onShopClick={() => navigateTo('products')} onProductClick={(id) => navigateTo('detail', id)} />;
+        return (
+          <HomePage
+            onShopClick={() => navigateTo('products')}
+            onProductClick={(id) => navigateTo('detail', id)}
+            onAddToCart={addToCart}
+          />
+        );
     }
   };
 
   return (
     <div className="App">
-      <Header activePage={currentPage} onNavigate={navigateTo} />
-      <main>
-        {renderPage()}
-      </main>
-      <Footer onNavigate={navigateTo} />
+      <Header
+        activePage={currentPage}
+        onNavigate={navigateTo}
+        cartCount={cartCount}
+      />
+      {renderPage()}
     </div>
   );
 }
