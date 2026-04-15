@@ -5,8 +5,14 @@ import './index.css';
 
 function App() {
   const [user, setUser] = useState(() => {
-    const savedUser = localStorage.getItem('bb_user');
-    return savedUser ? JSON.parse(savedUser) : null;
+    try {
+      const savedUser = localStorage.getItem('bb_user');
+      if (savedUser === null || savedUser === 'undefined') return null;
+      return JSON.parse(savedUser);
+    } catch (error) {
+      console.error('Error parsing user from localStorage:', error);
+      return null;
+    }
   });
 
   const isAdmin = () => {
@@ -25,16 +31,59 @@ function App() {
   };
 
   const [currentPage, setCurrentPage] = useState(() => {
-    const isPathAdmin = window.location.pathname.includes('/admin');
+    const path = window.location.pathname;
+    const isPathAdmin = path.includes('/admin');
+
     if (isPathAdmin) {
-      if (isAdmin()) {
-        return 'admin_dashboard';
-      } else {
-        return 'login';
+      if (!user) return 'login';
+      if (user.role !== 'admin') {
+        alert('Bạn không có quyền truy cập trang quản trị!');
+        window.history.replaceState({}, '', '/');
+        return 'home';
       }
+      return 'admin_dashboard';
     }
+
+    if (path.includes('/products')) return 'products';
+    if (path.includes('/cart')) return 'cart';
+    if (path.includes('/checkout')) return 'checkout';
+    if (path.includes('/login')) return 'login';
+    if (path.includes('/register')) return 'register';
     return 'home';
   });
+
+  // Xử lý nút Back/Forward của trình duyệt
+  React.useEffect(() => {
+    const handlePopState = () => {
+      const path = window.location.pathname;
+      if (path.includes('/admin')) {
+        if (!user) {
+          setCurrentPage('login');
+        } else if (user.role !== 'admin') {
+          alert('Bạn không có quyền truy cập trang quản trị!');
+          window.history.replaceState({}, '', '/');
+          setCurrentPage('home');
+        } else {
+          setCurrentPage('admin_dashboard');
+        }
+      } else if (path.includes('/products')) {
+        setCurrentPage('products');
+      } else if (path.includes('/cart')) {
+        setCurrentPage('cart');
+      } else if (path.includes('/checkout')) {
+        setCurrentPage('checkout');
+      } else if (path.includes('/login')) {
+        setCurrentPage('login');
+      } else if (path.includes('/register')) {
+        setCurrentPage('register');
+      } else {
+        setCurrentPage('home');
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [user]);
   
   const [selectedProductId, setSelectedProductId] = useState(null);
   const [cartItems, setCartItems] = useState([]);
@@ -70,11 +119,38 @@ function App() {
 
   // ── Navigation logic ──────────────────────────────────────────
   const navigateTo = (page, productId = null) => {
-    if (page.startsWith('admin_') && !isAdmin()) {
-      setCurrentPage('login');
-      return;
+    if (page.startsWith('admin_')) {
+      if (!user) {
+        setCurrentPage('login');
+        window.history.pushState({}, '', '/login');
+        return;
+      }
+      if (user.role !== 'admin') {
+        alert('Bạn không có quyền truy cập trang quản trị!');
+        window.history.pushState({}, '', '/');
+        setCurrentPage('home');
+        return;
+      }
     }
 
+    // Cập nhật URL trình duyệt cho khớp với state
+    let targetPath = '/';
+    if (page.startsWith('admin_')) {
+      targetPath = '/admin';
+    } else if (page === 'login') {
+      targetPath = '/login';
+    } else if (page === 'register') {
+      targetPath = '/register';
+    } else if (page === 'products') {
+      targetPath = '/products';
+    } else if (page === 'cart') {
+      targetPath = '/cart';
+    } else if (page === 'checkout') {
+      targetPath = '/checkout';
+    }
+
+    window.history.pushState({}, '', targetPath);
+    
     setCurrentPage(page);
     if (productId !== null) {
       setSelectedProductId(productId);

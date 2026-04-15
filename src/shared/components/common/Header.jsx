@@ -48,6 +48,16 @@ const Header = ({ activePage, onNavigate, cartCount = 0, user, onLogout }) => {
         
         {user ? (
           <div className="navbar__user-info" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            {user.role === 'admin' && (
+              <button 
+                className="navbar__icon-btn admin-btn" 
+                title="Trang quản trị" 
+                onClick={() => onNavigate('admin_dashboard')}
+                style={{ color: 'var(--pink-400)' }}
+              >
+                <i className="bi bi-shield-check"></i>
+              </button>
+            )}
             <span className="user-name" style={{ fontSize: '14px', fontWeight: '500', color: 'var(--text-main)', cursor: 'default' }}>
               Chào, {user.first_name}
             </span>

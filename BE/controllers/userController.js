@@ -44,13 +44,17 @@ class UserController {
     static async login(req, res) {
         try {
             const { email, password } = req.body;
+            console.log('Login attempt for email:', email);
 
             const user = await User.findOne({ where: { email } });
             if (!user) {
+                console.log('User not found in database for email:', email);
                 return res.status(400).json({ message: "Email hoặc mật khẩu không chính xác!" });
             }
 
             const isMatch = await bcrypt.compare(password, user.password);
+            console.log('Password match result:', isMatch);
+            
             if (!isMatch) {
                 return res.status(400).json({ message: "Email hoặc mật khẩu không chính xác!" });
             }

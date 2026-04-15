@@ -49,6 +49,12 @@ const AdminSidebar = ({ activePage, onNavigate, onLogout, user }) => {
         {renderNav(items.slice(2, 6))}
         <div className="admin-sidebar__section">Hệ thống</div>
         {renderNav(items.slice(6))}
+
+        <div className="admin-sidebar__section">Hành động</div>
+        <a className="admin-sidebar__item" onClick={() => onNavigate('home')}>
+          <span className="admin-sidebar__ico"><i className="bi bi-arrow-left-circle"></i></span>
+          Quay về trang khách
+        </a>
       </nav>
       <div className="admin-sidebar__foot" onClick={onLogout} style={{ cursor: 'pointer' }}>
         <i className="bi bi-box-arrow-left" style={{ marginRight: '8px' }}></i> Đăng xuất
