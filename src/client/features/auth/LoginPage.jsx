@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import authService from '../../../shared/services/authService';
 import './styles/Auth.css';
 
 const LoginPage = ({ onNavigate }) => {
@@ -6,12 +7,13 @@ const LoginPage = ({ onNavigate }) => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const togglePw = () => {
     setShowPassword(!showPassword);
   };
 
-  const doLogin = () => {
+  const doLogin = async () => {
     const trimmedEmail = email.trim();
     const trimmedPass = password.trim();
 
@@ -20,16 +22,26 @@ const LoginPage = ({ onNavigate }) => {
       return;
     }
 
-    // Mock login logic
-    if (trimmedEmail === 'admin@blushbloom.vn' && trimmedPass === 'admin123') {
-      localStorage.setItem('bb_user', JSON.stringify({ name: 'Kiều Biên', role: 'admin', email: trimmedEmail }));
-      // redirect to admin dashboard
-      onNavigate('admin_dashboard');
-    } else if (trimmedEmail === 'lananh@email.com' && trimmedPass === 'user123') {
-      localStorage.setItem('bb_user', JSON.stringify({ name: 'Nguyễn Lan Anh', role: 'user', email: trimmedEmail }));
-      onNavigate('home');
-    } else {
-      setErrorMsg('Email hoặc mật khẩu không đúng.');
+    try {
+      setLoading(true);
+      setErrorMsg('');
+      const response = await authService.login(trimmedEmail, trimmedPass);
+      
+      // Giả sử server trả về token, ta lưu thông tin cơ bản vào bb_user
+      // Ở quy mô Lab này, ta có thể lưu tạm email/role từ input hoặc giải mã token
+      const userObj = { email: trimmedEmail, role: trimmedEmail.includes('admin') ? 'admin' : 'user' };
+      localStorage.setItem('bb_user', JSON.stringify(userObj));
+
+      if (userObj.role === 'admin') {
+        onNavigate('admin_dashboard');
+      } else {
+        onNavigate('home');
+      }
+    } catch (error) {
+      const msg = error.response?.data?.message || 'Đăng nhập thất bại. Vui lòng thử lại.';
+      setErrorMsg(msg);
+    } finally {
+      setLoading(false);
     }
   };
 

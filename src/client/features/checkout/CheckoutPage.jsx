@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import orderService from '../../../shared/services/orderService';
 
-const CheckoutPage = ({ onNavigate }) => {
+const CheckoutPage = ({ onNavigate, cartItems = [] }) => {
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -9,6 +10,10 @@ const CheckoutPage = ({ onNavigate }) => {
     shippingAddress: false,
     paymentMethod: 'cash'
   });
+  const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
+
+  const totalPrice = cartItems.reduce((sum, item) => sum + (item.price * item.qty), 0);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -18,10 +23,43 @@ const CheckoutPage = ({ onNavigate }) => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert('Đặt hàng thành công! Cảm ơn bạn đã mua sắm tại Blush & Bloom. 🎉');
-    onNavigate('home');
+    
+    if (cartItems.length === 0) {
+      setErrorMsg('Giỏ hàng của bạn đang trống.');
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setErrorMsg('');
+
+      const orderData = {
+        customer_name: formData.fullName,
+        email: formData.email,
+        phone: formData.phone,
+        shipping_address: formData.address,
+        payment_method: formData.paymentMethod,
+        total_price: totalPrice,
+        items: cartItems.map(item => ({
+          product_id: item.id,
+          quantity: item.qty,
+          price: item.price
+        }))
+      };
+
+      await orderService.createOrder(orderData);
+      
+      alert('Đặt hàng thành công! Cảm ơn bạn đã mua sắm tại Blush & Bloom. 🎉');
+      // Xóa giỏ hàng sau khi đặt hàng (Cần được xử lý ở App.js thông qua một prop callback nếu muốn triệt để)
+      onNavigate('home');
+    } catch (error) {
+      console.error('Checkout failed:', error);
+      setErrorMsg(error.response?.data?.error || 'Có lỗi xảy ra khi đặt hàng. Vui lòng thử lại.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -202,7 +240,7 @@ const CheckoutPage = ({ onNavigate }) => {
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
         .page-breadcrumb button {
           font-family: inherit;
           background: none;

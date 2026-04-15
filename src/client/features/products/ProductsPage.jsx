@@ -1,12 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ProductFilter from './components/ProductFilter';
 import ProductList from './components/ProductList';
 import './styles/products.css';
 
-import { MOCK_PRODUCTS } from '../../../shared/constants/mockProducts';
+import productService from '../../../shared/services/productService';
 
 const ProductsPage = ({ onProductClick, onAddToCart }) => {
-  const [products] = useState(MOCK_PRODUCTS);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        const data = await productService.getAllProducts();
+        setProducts(data);
+        setLoading(false);
+      } catch (err) {
+        console.error('Failed to fetch products:', err);
+        setError('Không thể tải danh sách sản phẩm. Vui lòng thử lại sau.');
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  if (loading) return <div className="products-loading">Đang tải sản phẩm...</div>;
+  if (error) return <div className="products-error">{error}</div>;
 
   return (
     <div className="products-layout">

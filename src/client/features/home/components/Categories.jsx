@@ -1,13 +1,34 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import categoryService from '../../../../shared/services/categoryService';
 
 const Categories = ({ onCategoryClick }) => {
-  const cats = [
-    { id: 'lips', name: 'Son môi', icon: <i className="bi bi-palette"></i>, count: '128 sản phẩm', theme: 'cat--pink' },
-    { id: 'face', name: 'Má hồng', icon: <i className="bi bi-stars"></i>, count: '64 sản phẩm', theme: 'cat--gold' },
-    { id: 'eyes', name: 'Mắt & Kẻ mắt', icon: <i className="bi bi-eye"></i>, count: '96 sản phẩm', theme: 'cat--blue' },
-    { id: 'skincare', name: 'Dưỡng da', icon: <i className="bi bi-leaf"></i>, count: '85 sản phẩm', theme: 'cat--green' },
-    { id: 'gift', name: 'Gift Set', icon: <i className="bi bi-gift"></i>, count: '32 sản phẩm', theme: 'cat--purple' },
-  ];
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const data = await categoryService.getAllCategories();
+        setCategories(data);
+      } catch (error) {
+        console.error('Failed to fetch categories for home page:', error);
+      }
+    };
+    fetchCategories();
+  }, []);
+
+  const getTheme = (index) => {
+    const themes = ['cat--pink', 'cat--gold', 'cat--blue', 'cat--green', 'cat--purple'];
+    return themes[index % themes.length];
+  };
+
+  const getIcon = (name) => {
+    const lower = name.toLowerCase();
+    if (lower.includes('son') || lower.includes('môi')) return <i className="bi bi-palette"></i>;
+    if (lower.includes('má') || lower.includes('hồng')) return <i className="bi bi-stars"></i>;
+    if (lower.includes('mắt')) return <i className="bi bi-eye"></i>;
+    if (lower.includes('dưỡng')) return <i className="bi bi-leaf"></i>;
+    return <i className="bi bi-gift"></i>;
+  };
 
   return (
     <section className="section">
@@ -19,15 +40,15 @@ const Categories = ({ onCategoryClick }) => {
         <button className="see-all" onClick={onCategoryClick}>Xem tất cả →</button>
       </div>
       <div className="cat-grid">
-        {cats.map(cat => (
+        {categories.map((cat, index) => (
           <div 
             key={cat.id} 
-            className={`cat-card ${cat.theme}`} 
+            className={`cat-card ${getTheme(index)}`} 
             onClick={onCategoryClick}
           >
-            <span className="cat-card__icon">{cat.icon}</span>
+            <span className="cat-card__icon">{getIcon(cat.name)}</span>
             <div className="cat-card__name">{cat.name}</div>
-            <div className="cat-card__count">{cat.count}</div>
+            <div className="cat-card__count">{cat.product_count || 0} sản phẩm</div>
           </div>
         ))}
       </div>

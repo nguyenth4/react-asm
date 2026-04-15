@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import authService from '../../../shared/services/authService';
 import './styles/Auth.css';
 
 const RegisterPage = ({ onNavigate }) => {
@@ -13,6 +14,7 @@ const RegisterPage = ({ onNavigate }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const togglePw = () => setShowPassword(!showPassword);
 
@@ -32,7 +34,7 @@ const RegisterPage = ({ onNavigate }) => {
   const colors = ['', '#E24B4A', '#BA7517', '#378ADD', '#1D9E75'];
   const labels = ['', 'Yếu', 'Trung bình', 'Khá', 'Mạnh'];
 
-  const doRegister = () => {
+  const doRegister = async () => {
     const fn = firstName.trim();
     const ln = lastName.trim();
     const em = email.trim();
@@ -54,11 +56,29 @@ const RegisterPage = ({ onNavigate }) => {
       return;
     }
 
-    localStorage.setItem('bb_user', JSON.stringify({ name: `${fn} ${ln}`, role: 'user', email: em }));
-    setSuccessMsg(`Đăng ký thành công! Chào mừng ${fn}!`);
-    setTimeout(() => {
-      onNavigate('home');
-    }, 1500);
+    try {
+      setLoading(true);
+      const userData = {
+        first_name: fn,
+        last_name: ln,
+        email: em,
+        phone: ph,
+        password: password,
+        newsletter: newsletter
+      };
+      
+      const response = await authService.register(userData);
+      
+      setSuccessMsg(`Đăng ký thành công! Chào mừng ${fn}!`);
+      setTimeout(() => {
+        onNavigate('login');
+      }, 1500);
+    } catch (error) {
+      const msg = error.response?.data?.message || 'Đăng ký thất bại. Vui lòng thử lại.';
+      setErrorMsg(msg);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

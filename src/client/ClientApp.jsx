@@ -55,7 +55,7 @@ const ClientApp = ({
           />
         );
       case 'checkout':
-        return <CheckoutPage onNavigate={onNavigate} />;
+        return <CheckoutPage onNavigate={onNavigate} cartItems={cartItems} />;
       case 'login':
         return <LoginPage onNavigate={onNavigate} />;
       case 'register':

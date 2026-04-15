@@ -1,28 +1,48 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { formatCurrency } from '../../../shared/utils/format';
+import productService from '../../../shared/services/productService';
 import './styles/product-detail.css';
 
 const ProductDetailPage = ({ productId, onBack }) => {
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState('description');
 
-  // Lấy dữ liệu mock tạm thời (sau này thay bằng API fetch)
-  const product = {
-    id: productId || 1,
-    name: 'Velvet Rose Matte Lipstick',
-    category: 'Lips',
-    price: 320000,
-    oldPrice: null,
-    rating: 4.8,
-    reviews: 124,
-    description: 'Một thỏi son lì mang lại màu sắc tươi tắn, kết cấu mịn màng và không làm khô môi. Velvet Rose Matte Lipstick chứa chiết xuất hoa hồng ngọt ngào cùng Vitamin E để duy trì độ ẩm cả ngày dài. Thiết kế vỏ nhôm mạ vàng hồng sang trọng, đem lại cảm giác cao cấp khi cầm trên tay.',
-    ingredients: 'Dimethicone, Bis-Diglyceryl Polyacyladipate-2, Hydrogenated Polyisobutene, Phenyl Trimethicone, Tridecyl Trimellitate, Ozokerite, Hydrogenated Jojoba Oil...',
-    images: [
-      'https://images.unsplash.com/photo-1586495777744-4413f21062fa?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1625025732168-52fb983637e1?q=80&w=800&auto=format&fit=crop'
-    ]
-  };
+  useEffect(() => {
+    const fetchProduct = async () => {
+      if (!productId) {
+        setError('Không tìm thấy mã sản phẩm');
+        setLoading(false);
+        return;
+      }
+
+      try {
+        setLoading(true);
+        const data = await productService.getProductById(productId);
+        
+        // Map backend data to frontend format
+        const mappedProduct = {
+          ...data,
+          category: data.Category?.name || 'Uncategorized',
+          images: data.image ? [data.image] : ['https://via.placeholder.com/800'], // Fallback image if none
+          rating: 5.0, // Default rating as BE doesn't have it yet
+          reviews: data.review_count || 0,
+          ingredients: 'Thông tin thành phần đang được cập nhật...' // Default as BE doesn't have it yet
+        };
+        
+        setProduct(mappedProduct);
+        setLoading(false);
+      } catch (err) {
+        console.error('Failed to fetch product detail:', err);
+        setError('Không thể tải thông tin sản phẩm. Vui lòng thử lại sau.');
+        setLoading(false);
+      }
+    };
+
+    fetchProduct();
+  }, [productId]);
 
   const handleDecrease = () => {
     if (quantity > 1) setQuantity(prev => prev - 1);
@@ -31,6 +51,15 @@ const ProductDetailPage = ({ productId, onBack }) => {
   const handleIncrease = () => {
     setQuantity(prev => prev + 1);
   };
+
+  if (loading) return <div className="product-detail-loading">Đang tải thông tin sản phẩm...</div>;
+  if (error) return (
+    <div className="product-detail-error">
+      <p>{error}</p>
+      <button onClick={onBack} className="btn-back">Quay lại</button>
+    </div>
+  );
+  if (!product) return null;
 
   return (
     <div className="product-detail-layout">

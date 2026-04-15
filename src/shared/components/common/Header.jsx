@@ -1,6 +1,7 @@
 import React from 'react';
 
 const Header = ({ activePage, onNavigate, cartCount = 0 }) => {
+
   const handleNav = (e, page) => {
     e.preventDefault();
     onNavigate(page);
@@ -34,44 +35,7 @@ const Header = ({ activePage, onNavigate, cartCount = 0 }) => {
             onClick={(e) => handleNav(e, 'products')}
             className={activePage === 'products' ? 'active' : ''}
           >
-            Son môi
-          </a>
-        </li>
-        <li>
-          <a
-            href="/products"
-            onClick={(e) => handleNav(e, 'products')}
-            className={activePage === 'products' ? 'active' : ''}
-          >
-            Mắt
-          </a>
-        </li>
-        <li>
-          <a
-            href="/products"
-            onClick={(e) => handleNav(e, 'products')}
-            className={activePage === 'products' ? 'active' : ''}
-          >
-            Má hồng
-          </a>
-        </li>
-        <li>
-          <a
-            href="/products"
-            onClick={(e) => handleNav(e, 'products')}
-            className={activePage === 'products' ? 'active' : ''}
-          >
-            Dưỡng da
-          </a>
-        </li>
-        <li>
-          <a href="#!" onClick={(e) => e.preventDefault()}>
-            Thương hiệu
-          </a>
-        </li>
-        <li>
-          <a href="/checkout" onClick={(e) => handleNav(e, 'checkout')} className={activePage === 'checkout' ? 'active' : ''}>
-            Thanh toán
+            Sản phẩm
           </a>
         </li>
       </ul>
