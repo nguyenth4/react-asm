@@ -16,7 +16,10 @@ const ClientApp = ({
   addToCart, 
   updateQty, 
   removeFromCart,
-  selectedProductId 
+  selectedProductId,
+  user,
+  onLogout,
+  onLoginSuccess
 }) => {
   const cartCount = cartItems.reduce((sum, item) => sum + item.qty, 0);
 
@@ -57,7 +60,7 @@ const ClientApp = ({
       case 'checkout':
         return <CheckoutPage onNavigate={onNavigate} cartItems={cartItems} />;
       case 'login':
-        return <LoginPage onNavigate={onNavigate} />;
+        return <LoginPage onNavigate={onNavigate} onLoginSuccess={onLoginSuccess} />;
       case 'register':
         return <RegisterPage onNavigate={onNavigate} />;
       default:
@@ -77,6 +80,8 @@ const ClientApp = ({
         activePage={currentPage}
         onNavigate={onNavigate}
         cartCount={cartCount}
+        user={user}
+        onLogout={onLogout}
       />
       
       <main>

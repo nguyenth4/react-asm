@@ -4,9 +4,9 @@ import DashboardStats from './components/DashboardStats';
 import RecentActivity from './components/RecentActivity';
 import { formatPrice } from '../../../shared/utils/format';
 
-const DashboardPage = ({ onNavigate }) => {
+const DashboardPage = ({ onNavigate, user, onLogout }) => {
   return (
-    <AdminLayout activePage="admin_dashboard" onNavigate={onNavigate} title="Dashboard">
+    <AdminLayout activePage="admin_dashboard" onNavigate={onNavigate} title="Dashboard" user={user} onLogout={onLogout}>
       {/* STATS (UI) */}
       <DashboardStats />
 

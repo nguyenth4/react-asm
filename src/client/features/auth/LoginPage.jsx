@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import authService from '../../../shared/services/authService';
 import './styles/Auth.css';
 
-const LoginPage = ({ onNavigate }) => {
+const LoginPage = ({ onNavigate, onLoginSuccess }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -27,12 +27,14 @@ const LoginPage = ({ onNavigate }) => {
       setErrorMsg('');
       const response = await authService.login(trimmedEmail, trimmedPass);
       
-      // Giả sử server trả về token, ta lưu thông tin cơ bản vào bb_user
-      // Ở quy mô Lab này, ta có thể lưu tạm email/role từ input hoặc giải mã token
-      const userObj = { email: trimmedEmail, role: trimmedEmail.includes('admin') ? 'admin' : 'user' };
-      localStorage.setItem('bb_user', JSON.stringify(userObj));
+      const { user } = response;
+      localStorage.setItem('bb_user', JSON.stringify(user));
+      
+      if (onLoginSuccess) {
+        onLoginSuccess(user);
+      }
 
-      if (userObj.role === 'admin') {
+      if (user.role === 'admin') {
         onNavigate('admin_dashboard');
       } else {
         onNavigate('home');

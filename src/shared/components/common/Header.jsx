@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Header = ({ activePage, onNavigate, cartCount = 0 }) => {
+const Header = ({ activePage, onNavigate, cartCount = 0, user, onLogout }) => {
 
   const handleNav = (e, page) => {
     e.preventDefault();
@@ -45,9 +45,21 @@ const Header = ({ activePage, onNavigate, cartCount = 0 }) => {
         <button className="navbar__icon-btn" title="Tìm kiếm" aria-label="Tìm kiếm">
           <i className="bi bi-search"></i>
         </button>
-        <button className="navbar__icon-btn" title="Tài khoản" aria-label="Tài khoản" onClick={() => onNavigate('login')}>
-          <i className="bi bi-person"></i>
-        </button>
+        
+        {user ? (
+          <div className="navbar__user-info" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <span className="user-name" style={{ fontSize: '14px', fontWeight: '500', color: 'var(--text-main)', cursor: 'default' }}>
+              Chào, {user.first_name}
+            </span>
+            <button className="navbar__icon-btn" title="Đăng xuất" onClick={onLogout}>
+              <i className="bi bi-box-arrow-right"></i>
+            </button>
+          </div>
+        ) : (
+          <button className="navbar__icon-btn" title="Đăng nhập" aria-label="Đăng nhập" onClick={() => onNavigate('login')}>
+            <i className="bi bi-person"></i>
+          </button>
+        )}
 
         {/* Cart button với badge */}
         <button
@@ -64,7 +76,9 @@ const Header = ({ activePage, onNavigate, cartCount = 0 }) => {
           )}
         </button>
 
-        <button className="btn-register" onClick={() => onNavigate('register')}>Đăng ký</button>
+        {!user && (
+          <button className="btn-register" onClick={() => onNavigate('register')}>Đăng ký</button>
+        )}
       </div>
     </nav>
   );

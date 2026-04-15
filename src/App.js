@@ -4,10 +4,34 @@ import AdminApp from './admin/AdminApp';
 import './index.css';
 
 function App() {
+  const [user, setUser] = useState(() => {
+    const savedUser = localStorage.getItem('bb_user');
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
+
+  const isAdmin = () => {
+    return user && user.role === 'admin';
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('bb_user');
+    localStorage.removeItem('token');
+    setUser(null);
+    navigateTo('home');
+  };
+
+  const handleLoginSuccess = (userData) => {
+    setUser(userData);
+  };
+
   const [currentPage, setCurrentPage] = useState(() => {
-    // Nếu URL có /admin thì mặc định vào Dashboard
-    if (window.location.pathname.includes('/admin')) {
-      return 'admin_dashboard';
+    const isPathAdmin = window.location.pathname.includes('/admin');
+    if (isPathAdmin) {
+      if (isAdmin()) {
+        return 'admin_dashboard';
+      } else {
+        return 'login';
+      }
     }
     return 'home';
   });
@@ -46,6 +70,11 @@ function App() {
 
   // ── Navigation logic ──────────────────────────────────────────
   const navigateTo = (page, productId = null) => {
+    if (page.startsWith('admin_') && !isAdmin()) {
+      setCurrentPage('login');
+      return;
+    }
+
     setCurrentPage(page);
     if (productId !== null) {
       setSelectedProductId(productId);
@@ -60,6 +89,8 @@ function App() {
         <AdminApp 
           currentPage={currentPage} 
           onNavigate={navigateTo} 
+          user={user}
+          onLogout={handleLogout}
         />
       ) : (
         <ClientApp 
@@ -70,6 +101,9 @@ function App() {
           updateQty={updateQty}
           removeFromCart={removeFromCart}
           selectedProductId={selectedProductId}
+          user={user}
+          onLogout={handleLogout}
+          onLoginSuccess={handleLoginSuccess}
         />
       )}
     </div>

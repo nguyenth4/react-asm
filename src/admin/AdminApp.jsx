@@ -6,21 +6,21 @@ import ProductManagementPage from './features/product-management/ProductManageme
 import OrderManagementPage from './features/order-management/OrderManagementPage';
 import CustomerManagementPage from './features/user-management/CustomerManagementPage';
 
-const AdminApp = ({ currentPage, onNavigate }) => {
+const AdminApp = ({ currentPage, onNavigate, user, onLogout }) => {
   const renderAdminPage = () => {
     switch (currentPage) {
       case 'admin_dashboard':
-        return <DashboardPage onNavigate={onNavigate} />;
+        return <DashboardPage onNavigate={onNavigate} user={user} onLogout={onLogout} />;
       case 'admin_categories':
-        return <CategoryPage onNavigate={onNavigate} />;
+        return <CategoryPage onNavigate={onNavigate} user={user} onLogout={onLogout} />;
       case 'admin_products':
-        return <ProductManagementPage onNavigate={onNavigate} />;
+        return <ProductManagementPage onNavigate={onNavigate} user={user} onLogout={onLogout} />;
       case 'admin_orders':
-        return <OrderManagementPage onNavigate={onNavigate} />;
+        return <OrderManagementPage onNavigate={onNavigate} user={user} onLogout={onLogout} />;
       case 'admin_customers':
-        return <CustomerManagementPage onNavigate={onNavigate} />;
+        return <CustomerManagementPage onNavigate={onNavigate} user={user} onLogout={onLogout} />;
       default:
-        return <DashboardPage onNavigate={onNavigate} />;
+        return <DashboardPage onNavigate={onNavigate} user={user} onLogout={onLogout} />;
     }
   };
 

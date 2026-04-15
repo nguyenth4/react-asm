@@ -1,6 +1,6 @@
 import React from 'react';
 
-const AdminSidebar = ({ activePage, onNavigate }) => {
+const AdminSidebar = ({ activePage, onNavigate, onLogout, user }) => {
   const items = [
     { label: 'Dashboard', icon: <i className="bi bi-speedometer2"></i>, key: 'admin_dashboard' },
     { label: 'Đơn hàng', icon: <i className="bi bi-cart3"></i>, key: 'admin_orders', badge: '5' },
@@ -25,6 +25,8 @@ const AdminSidebar = ({ activePage, onNavigate }) => {
     ));
   };
 
+  const displayName = user ? `${user.first_name} ${user.last_name}` : 'Kiều Biên';
+  const displayInitials = user ? `${user.first_name[0]}${user.last_name[0]}`.toUpperCase() : 'KB';
 
   return (
     <aside className="admin-sidebar">
@@ -33,10 +35,10 @@ const AdminSidebar = ({ activePage, onNavigate }) => {
         <div className="admin-sidebar__sub">Admin Dashboard</div>
       </div>
       <div className="admin-sidebar__profile">
-        <div className="admin-sidebar__avatar">KB</div>
+        <div className="admin-sidebar__avatar">{displayInitials}</div>
         <div>
-          <div className="admin-sidebar__name">Kiều Biên</div>
-          <div className="admin-sidebar__role">Super Admin</div>
+          <div className="admin-sidebar__name">{displayName}</div>
+          <div className="admin-sidebar__role">{user ? user.role : 'Super Admin'}</div>
         </div>
         <div className="online-dot"></div>
       </div>
@@ -48,7 +50,7 @@ const AdminSidebar = ({ activePage, onNavigate }) => {
         <div className="admin-sidebar__section">Hệ thống</div>
         {renderNav(items.slice(6))}
       </nav>
-      <div className="admin-sidebar__foot" onClick={() => onNavigate('home')}>
+      <div className="admin-sidebar__foot" onClick={onLogout} style={{ cursor: 'pointer' }}>
         <i className="bi bi-box-arrow-left" style={{ marginRight: '8px' }}></i> Đăng xuất
       </div>
     </aside>
