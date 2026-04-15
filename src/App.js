@@ -100,6 +100,11 @@ function App() {
 
   // ── Cart logic ──────────────────────────────────────────
   const addToCart = (product, qty = 1) => {
+    if (!user) {
+      alert('Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng!');
+      navigateTo('login');
+      return;
+    }
     setCartItems((prev) => {
       const existing = prev.find((item) => item.id === product.id);
       if (existing) {
@@ -156,6 +161,11 @@ function App() {
     } else if (page === 'cart') {
       targetPath = '/cart';
     } else if (page === 'checkout') {
+      if (!user) {
+        alert('Vui lòng đăng nhập để tiến hành thanh toán!');
+        navigateTo('login');
+        return;
+      }
       targetPath = '/checkout';
     }
 
@@ -168,6 +178,10 @@ function App() {
   };
 
   const isAdminPage = currentPage && currentPage.startsWith('admin_');
+
+  const clearCart = () => {
+    setCartItems([]);
+  };
 
   return (
     <div className="App">
@@ -190,6 +204,7 @@ function App() {
           user={user}
           onLogout={handleLogout}
           onLoginSuccess={handleLoginSuccess}
+          onClearCart={clearCart}
         />
       )}
     </div>

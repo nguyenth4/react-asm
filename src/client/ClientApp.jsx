@@ -19,7 +19,8 @@ const ClientApp = ({
   selectedProductId,
   user,
   onLogout,
-  onLoginSuccess
+  onLoginSuccess,
+  onClearCart
 }) => {
   const cartCount = cartItems.reduce((sum, item) => sum + item.qty, 0);
 
@@ -55,10 +56,18 @@ const ClientApp = ({
             onUpdateQty={updateQty}
             onRemove={removeFromCart}
             onContinueShopping={() => onNavigate('products')}
+            onNavigate={onNavigate}
           />
         );
       case 'checkout':
-        return <CheckoutPage onNavigate={onNavigate} cartItems={cartItems} />;
+        return (
+          <CheckoutPage 
+            onNavigate={onNavigate} 
+            cartItems={cartItems} 
+            user={user}
+            onClearCart={() => onClearCart && onClearCart()} 
+          />
+        );
       case 'login':
         return <LoginPage onNavigate={onNavigate} onLoginSuccess={onLoginSuccess} />;
       case 'register':

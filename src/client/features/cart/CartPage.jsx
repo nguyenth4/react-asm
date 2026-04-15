@@ -7,7 +7,7 @@ import './styles/cart.css';
 const SHIPPING_FEE = 30000;
 const FREE_SHIP_THRESHOLD = 500000;
 
-const CartPage = ({ cartItems, onUpdateQty, onRemove, onContinueShopping }) => {
+const CartPage = ({ cartItems, onUpdateQty, onRemove, onContinueShopping, onNavigate }) => {
   const [couponCode, setCouponCode] = useState('');
   const [appliedCoupon, setAppliedCoupon] = useState(null);
   const [couponMsg, setCouponMsg] = useState('');
@@ -35,7 +35,11 @@ const CartPage = ({ cartItems, onUpdateQty, onRemove, onContinueShopping }) => {
   };
 
   const handleCheckout = () => {
-    alert('🎉 Chức năng thanh toán đang được phát triển!');
+    if (cartItems.length === 0) {
+      alert('Giỏ hàng của bạn đang trống!');
+      return;
+    }
+    onNavigate('checkout');
   };
 
   return (
