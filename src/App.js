@@ -28,6 +28,16 @@ function App() {
 
   const handleLoginSuccess = (userData) => {
     setUser(userData);
+    alert('Đăng nhập thành công!');
+    
+    // Chuyển hướng ngay lập tức dựa trên userData mới
+    if (userData.role === 'admin') {
+      setCurrentPage('admin_dashboard');
+      window.history.pushState({}, '', '/admin');
+    } else {
+      setCurrentPage('home');
+      window.history.pushState({}, '', '/');
+    }
   };
 
   const [currentPage, setCurrentPage] = useState(() => {

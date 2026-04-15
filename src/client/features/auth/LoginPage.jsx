@@ -33,12 +33,6 @@ const LoginPage = ({ onNavigate, onLoginSuccess }) => {
       if (onLoginSuccess) {
         onLoginSuccess(user);
       }
-
-      if (user.role === 'admin') {
-        onNavigate('admin_dashboard');
-      } else {
-        onNavigate('home');
-      }
     } catch (error) {
       const msg = error.response?.data?.message || 'Đăng nhập thất bại. Vui lòng thử lại.';
       setErrorMsg(msg);
