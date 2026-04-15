@@ -49,6 +49,7 @@ const ProductManagementPage = ({ onNavigate }) => {
         filters={filters}
         onFilterChange={setFilters}
         onAddClick={() => openModal()}
+        categories={categories}
       />
 
       {/* BẢNG DỮ LIỆU (UI) */}

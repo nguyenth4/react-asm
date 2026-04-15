@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import categoryService from '../../../../shared/services/categoryService';
+import { generateSlug } from '../../../../shared/utils/format';
 
 export const useCategoryManagement = () => {
   const [categories, setCategories] = useState([]);
@@ -31,21 +32,22 @@ export const useCategoryManagement = () => {
     fetchCategories();
   }, []);
 
-  const toggleStatus = async (id) => {
-    // Tạm thời chỉ cập nhật UI, thực tế sẽ gọi API cập nhật status
-    setCategories(categories.map(c => 
-      c.id === id ? { ...c, status: !c.status } : c
-    ));
+  const toggleStatus = async (id, currentStatus) => {
+    try {
+      await categoryService.updateCategory(id, { status: currentStatus ? 'hidden' : 'active' });
+      fetchCategories();
+    } catch (error) {
+      alert('Không thể cập nhật trạng thái!');
+    }
   };
 
   const deleteCategory = async (id) => {
     if (window.confirm('Bạn có chắc chắn muốn xóa danh mục này?')) {
       try {
-        // Gọi API xóa ở đây (giả định)
-        // await categoryService.deleteCategory(id);
-        setCategories(categories.filter(c => c.id !== id));
+        await categoryService.deleteCategory(id);
+        fetchCategories();
       } catch (error) {
-        alert('Không thể xóa danh mục!');
+        alert('Lỗi khi xóa: ' + (error.response?.data?.error || error.message));
       }
     }
   };
@@ -61,13 +63,26 @@ export const useCategoryManagement = () => {
   };
 
   const saveCategory = async (catData) => {
-    // Chức năng thêm/sửa thực tế sẽ được làm sau, hiện chỉ cập nhật UI
-    if (editingCategory) {
-      setCategories(categories.map(c => c.id === editingCategory.id ? { ...c, ...catData } : c));
-    } else {
-      setCategories([...categories, { ...catData, id: Date.now(), count: 0, status: true }]);
+    try {
+      const payload = {
+        name: catData.name,
+        slug: catData.slug || generateSlug(catData.name),
+        status: catData.status ? 'active' : 'hidden'
+      };
+
+      if (editingCategory) {
+        await categoryService.updateCategory(editingCategory.id, payload);
+        alert('Cập nhật thành công!');
+      } else {
+        await categoryService.createCategory(payload);
+        alert('Thêm mới thành công!');
+      }
+      
+      fetchCategories();
+      closeModal();
+    } catch (error) {
+      alert('Lỗi: ' + (error.response?.data?.error || error.message));
     }
-    closeModal();
   };
 
   return {

@@ -12,7 +12,8 @@ const CategoryPage = ({ onNavigate }) => {
     openModal,
     closeModal,
     saveCategory,
-    deleteCategory
+    deleteCategory,
+    toggleStatus
   } = useCategoryManagement();
 
   return (
@@ -38,6 +39,7 @@ const CategoryPage = ({ onNavigate }) => {
         categories={categories}
         onEdit={openModal}
         onDelete={deleteCategory}
+        onToggleStatus={toggleStatus}
       />
 
       {/* MODAL THÊM/SỬA (UI) */}

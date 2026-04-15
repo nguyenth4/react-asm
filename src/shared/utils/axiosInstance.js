@@ -32,8 +32,9 @@ axiosInstance.interceptors.response.use(
     if (error.response && error.response.status === 401) {
       // Xử lý khi token hết hạn hoặc không hợp lệ
       console.error('Unauthorized, logging out...');
-      // localStorage.removeItem('token');
-      // window.location.href = '/login';
+      localStorage.removeItem('token');
+      localStorage.removeItem('bb_user');
+      window.location.href = '/login';
     }
     return Promise.reject(error);
   }

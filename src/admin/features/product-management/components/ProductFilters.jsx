@@ -1,6 +1,6 @@
 import React from 'react';
 
-const ProductFilters = ({ searchTerm, onSearchChange, filters, onFilterChange, onAddClick }) => {
+const ProductFilters = ({ searchTerm, onSearchChange, filters, onFilterChange, onAddClick, categories = [] }) => {
   return (
     <div className="filter-bar">
       <input 
@@ -18,10 +18,9 @@ const ProductFilters = ({ searchTerm, onSearchChange, filters, onFilterChange, o
         onChange={(e) => onFilterChange({ ...filters, category: e.target.value })}
       >
         <option value="">Tất cả danh mục</option>
-        <option value="Son môi">Son môi</option>
-        <option value="Phấn má">Phấn má</option>
-        <option value="Mắt">Mắt</option>
-        <option value="Dưỡng da">Dưỡng da</option>
+        {categories.map(c => (
+          <option key={c.id} value={c.name}>{c.name}</option>
+        ))}
       </select>
       
       <select 
