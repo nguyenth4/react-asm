@@ -29,6 +29,16 @@ const orderService = {
       console.error(`Error fetching order with id ${id}:`, error);
       throw error;
     }
+  },
+
+  updateOrderStatus: async (id, status) => {
+    try {
+      const response = await axiosInstance.put(`/orders/${id}/status`, { status });
+      return response.data;
+    } catch (error) {
+      console.error(`Error updating order status for id ${id}:`, error);
+      throw error;
+    }
   }
 };
 

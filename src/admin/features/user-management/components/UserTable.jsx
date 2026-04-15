@@ -11,10 +11,10 @@ const UserTable = ({ customers, onViewProfile }) => {
         <table className="admin-table">
           <thead>
             <tr>
-              <th style={{ width: '36px' }}><input type="checkbox" /></th>
               <th>Khách hàng</th>
               <th>Email</th>
               <th>Điện thoại</th>
+              <th>Vai trò</th>
               <th>Hạng</th>
               <th>Điểm</th>
               <th>Tổng đơn</th>
@@ -26,7 +26,6 @@ const UserTable = ({ customers, onViewProfile }) => {
           <tbody>
             {customers.map(c => (
               <tr key={c.id}>
-                <td><input type="checkbox" /></td>
                 <td>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                     <div className="cust-av2" style={{ background: c.color }}>{c.avatar}</div>
@@ -35,6 +34,18 @@ const UserTable = ({ customers, onViewProfile }) => {
                 </td>
                 <td style={{ color: 'var(--text-muted)', fontSize: '12px' }}>{c.email}</td>
                 <td style={{ color: 'var(--text-muted)', fontSize: '12px' }}>{c.phone}</td>
+                <td>
+                  <span style={{ 
+                    fontSize: '11px', 
+                    padding: '2px 8px', 
+                    borderRadius: '10px', 
+                    backgroundColor: c.role === 'admin' ? '#FEE2E2' : '#E0F2FE',
+                    color: c.role === 'admin' ? '#991B1B' : '#0369A1',
+                    fontWeight: 600
+                  }}>
+                    {c.role === 'admin' ? 'Quản trị' : 'Thành viên'}
+                  </span>
+                </td>
                 <td><span className={`tier-badge ${tierClass[c.tier]}`}>{tierLabels[c.tier]}</span></td>
                 <td style={{ fontWeight: 600 }}>{c.points.toLocaleString()}</td>
                 <td style={{ fontWeight: 600, color: 'var(--blue)' }}>{c.orders}</td>

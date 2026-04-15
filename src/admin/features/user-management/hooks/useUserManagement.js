@@ -48,6 +48,20 @@ export const useUserManagement = () => {
   const openProfile = (customer) => setSelectedCustomer(customer);
   const closeProfile = () => setSelectedCustomer(null);
 
+  const updateUserRole = async (userId, newRole) => {
+    try {
+      await userService.updateUserRole(userId, newRole);
+      setCustomers(prev => prev.map(u => u.id === userId ? { ...u, role: newRole } : u));
+      // Cập nhật luôn selectedCustomer để Modal thay đổi thông tin ngay lập tức
+      if (selectedCustomer && selectedCustomer.id === userId) {
+        setSelectedCustomer(prev => ({ ...prev, role: newRole }));
+      }
+      alert('Cập nhật vai trò thành công!');
+    } catch (error) {
+      alert('Lỗi khi cập nhật vai trò: ' + (error.response?.data?.message || error.message));
+    }
+  };
+
   return {
     customers,
     loading,
@@ -58,6 +72,7 @@ export const useUserManagement = () => {
     setTierFilter,
     selectedCustomer,
     openProfile,
-    closeProfile
+    closeProfile,
+    updateUserRole
   };
 };

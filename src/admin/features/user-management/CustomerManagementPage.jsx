@@ -15,7 +15,8 @@ const CustomerManagementPage = ({ onNavigate }) => {
     setTierFilter,
     selectedCustomer,
     openProfile,
-    closeProfile
+    closeProfile,
+    updateUserRole
   } = useUserManagement();
 
   return (
@@ -59,7 +60,8 @@ const CustomerManagementPage = ({ onNavigate }) => {
       <UserModal 
         customer={selectedCustomer} 
         isOpen={!!selectedCustomer} 
-        onClose={closeProfile} 
+        onClose={closeProfile}
+        onUpdateRole={updateUserRole}
       />
     </AdminLayout>
   );

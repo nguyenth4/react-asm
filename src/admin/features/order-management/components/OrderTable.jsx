@@ -16,7 +16,6 @@ const OrderTable = ({ orders, onSelectOrder, getStatusLabel, getStatusClass }) =
         <table className="admin-table">
           <thead>
             <tr>
-              <th style={{ width: '32px' }}><input type="checkbox" /></th>
               <th>Mã đơn</th>
               <th>Khách hàng</th>
               <th>Sản phẩm</th>
@@ -30,7 +29,6 @@ const OrderTable = ({ orders, onSelectOrder, getStatusLabel, getStatusClass }) =
           <tbody>
             {orders.map(o => (
               <tr key={o.id}>
-                <td><input type="checkbox" /></td>
                 <td>
                   <span className="order-id-link" onClick={() => onSelectOrder(o)}>
                     #{o.id}

@@ -43,6 +43,10 @@ export const useOrderManagement = () => {
       // Gọi API cập nhật status thực tế nếu có
       await orderService.updateOrderStatus(orderId, newStatus);
       setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status: newStatus } : o));
+      // Cập nhật luôn selectedOrder để Modal thay đổi thông tin ngay lập tức
+      if (selectedOrder && selectedOrder.id === orderId) {
+        setSelectedOrder(prev => ({ ...prev, status: newStatus }));
+      }
       alert('Đã cập nhật trạng thái!');
     } catch (error) {
       alert('Lỗi khi cập nhật trạng thái: ' + (error.response?.data?.message || error.message));
