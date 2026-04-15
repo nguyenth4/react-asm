@@ -1,11 +1,11 @@
 import React from 'react';
 
-const DashboardStats = () => {
+const DashboardStats = ({ data }) => {
   const stats = [
-    { label: 'Doanh thu tháng', val: '128,450,000đ', icon: 'bi-cash-stack', color: '#059669', bg: '#ecfdf5', trend: '+12.5% từ tháng trước' },
-    { label: 'Đơn hàng mới', val: '456', icon: 'bi-cart-check', color: '#2563eb', bg: '#eff6ff', trend: '+5.2% từ tuần trước' },
-    { label: 'Khách hàng', val: '1,280', icon: 'bi-people', color: '#d946ef', bg: '#fdf4ff', trend: '+18 thành viên mới' },
-    { label: 'Tỷ lệ chuyển đổi', val: '3.85%', icon: 'bi-graph-up-arrow', color: '#f59e0b', bg: '#fffbeb', trend: '-0.4% so với hôm qua' }
+    { label: 'Doanh thu (Done)', val: data?.revenue || '0đ', icon: 'bi-cash-stack', color: '#059669', bg: '#ecfdf5', trend: '+12.5% từ tháng trước' },
+    { label: 'Tổng đơn hàng', val: data?.orders || '0', icon: 'bi-cart-check', color: '#2563eb', bg: '#eff6ff', trend: '+5.2% từ tuần trước' },
+    { label: 'Khách hàng', val: data?.customers || '0', icon: 'bi-people', color: '#d946ef', bg: '#fdf4ff', trend: '+18 thành viên mới' },
+    { label: 'Sản phẩm', val: data?.products || '0', icon: 'bi-box-seam', color: '#f59e0b', bg: '#fffbeb', trend: 'Trong kho' }
   ];
 
   return (

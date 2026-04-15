@@ -1,27 +1,52 @@
-import { useState } from 'react';
-
-const mockCategories = [
-  { id: 1, name: 'Son môi', slug: 'son-moi', count: 124, status: true },
-  { id: 2, name: 'Phấn má', slug: 'phan-ma', count: 45, status: true },
-  { id: 3, name: 'Mắt & Kẻ mắt', slug: 'mat-ke-mat', count: 72, status: true },
-  { id: 4, name: 'Dưỡng da', slug: 'duong-da', count: 86, status: true },
-  { id: 5, name: 'Nước hoa', slug: 'nuoc-hoa', count: 30, status: false },
-];
+import { useState, useEffect } from 'react';
+import categoryService from '../../../../shared/services/categoryService';
 
 export const useCategoryManagement = () => {
-  const [categories, setCategories] = useState(mockCategories);
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [editingCategory, setEditingCategory] = useState(null);
 
-  const toggleStatus = (id) => {
+  const fetchCategories = async () => {
+    try {
+      setLoading(true);
+      const data = await categoryService.getAllCategories();
+      
+      // Map data for UI
+      const mappedData = data.map(c => ({
+        ...c,
+        status: c.status === 'active',
+        count: c.product_count || 0
+      }));
+
+      setCategories(mappedData);
+    } catch (error) {
+      console.error('Failed to fetch categories:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const toggleStatus = async (id) => {
+    // Tạm thời chỉ cập nhật UI, thực tế sẽ gọi API cập nhật status
     setCategories(categories.map(c => 
       c.id === id ? { ...c, status: !c.status } : c
     ));
   };
 
-  const deleteCategory = (id) => {
+  const deleteCategory = async (id) => {
     if (window.confirm('Bạn có chắc chắn muốn xóa danh mục này?')) {
-      setCategories(categories.filter(c => c.id !== id));
+      try {
+        // Gọi API xóa ở đây (giả định)
+        // await categoryService.deleteCategory(id);
+        setCategories(categories.filter(c => c.id !== id));
+      } catch (error) {
+        alert('Không thể xóa danh mục!');
+      }
     }
   };
 
@@ -35,17 +60,19 @@ export const useCategoryManagement = () => {
     setEditingCategory(null);
   };
 
-  const saveCategory = (catData) => {
+  const saveCategory = async (catData) => {
+    // Chức năng thêm/sửa thực tế sẽ được làm sau, hiện chỉ cập nhật UI
     if (editingCategory) {
       setCategories(categories.map(c => c.id === editingCategory.id ? { ...c, ...catData } : c));
     } else {
-      setCategories([...categories, { ...catData, id: Date.now(), count: 0 }]);
+      setCategories([...categories, { ...catData, id: Date.now(), count: 0, status: true }]);
     }
     closeModal();
   };
 
   return {
     categories,
+    loading,
     showModal,
     editingCategory,
     openModal,
