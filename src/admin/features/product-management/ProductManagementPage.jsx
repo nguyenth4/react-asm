@@ -9,11 +9,14 @@ import { useProductManagement } from './hooks/useProductManagement';
 const ProductManagementPage = ({ onNavigate }) => {
   const {
     products,
+    categories,
     filteredProducts,
     searchTerm,
     setSearchTerm,
     filters,
     setFilters,
+    boxFilter,
+    setBoxFilter,
     selectedIds,
     showModal,
     editingProduct,
@@ -33,8 +36,11 @@ const ProductManagementPage = ({ onNavigate }) => {
       title="Quản lý sản phẩm" 
       subTitle={`Có tổng cộng ${products.length} sản phẩm`}
     >
-      {/* GIAO DIỆN THỐNG KÊ (UI) */}
-      <ProductStats products={products} />
+      <ProductStats 
+        products={products} 
+        boxFilter={boxFilter}
+        setBoxFilter={setBoxFilter}
+      />
 
       {/* BỘ LỌC (UI) */}
       <ProductFilters 
@@ -62,6 +68,7 @@ const ProductManagementPage = ({ onNavigate }) => {
         onClose={closeModal}
         onSave={saveProduct}
         editingProduct={editingProduct}
+        categories={categories}
       />
     </AdminLayout>
   );

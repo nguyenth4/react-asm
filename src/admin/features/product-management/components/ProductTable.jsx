@@ -12,33 +12,12 @@ const ProductTable = ({
 }) => {
   return (
     <div className="data-table">
-      <div className="data-table__head">
-        <span style={{ fontSize: '13px', color: 'var(--text-muted)' }}>
-          Đã chọn <strong>{selectedIds.length}</strong> sản phẩm
-        </span>
-        <div className="bulk-actions">
-          <button className="bk-btn">Ẩn</button>
-          <button 
-            className="bk-btn bk-btn--danger" 
-            onClick={onDeleteSelected}
-            disabled={selectedIds.length === 0}
-          >
-            Xóa đã chọn
-          </button>
-        </div>
-      </div>
       <div className="admin-table-wrap">
         <table className="admin-table">
           <thead>
             <tr>
-              <th style={{ width: '36px' }}>
-                <input 
-                  type="checkbox" 
-                  onChange={(e) => onToggleSelectAll(e.target.checked)}
-                  checked={products.length > 0 && selectedIds.length === products.length} 
-                />
-              </th>
-              <th>Sản phẩm</th>
+              <th>Tên sản phẩm</th>
+              <th>Hình ảnh</th>
               <th>Danh mục</th>
               <th>Giá bán</th>
               <th>Tồn kho</th>
@@ -54,19 +33,20 @@ const ProductTable = ({
               return (
                 <tr key={p.id}>
                   <td>
-                    <input 
-                      type="checkbox" 
-                      checked={selectedIds.includes(p.id)} 
-                      onChange={() => onToggleSelectOne(p.id)} 
-                    />
+                    <div>
+                      <div className="prod-name" style={{ fontWeight: '500', color: 'var(--text-dark)', marginBottom: '4px' }}>{p.name}</div>
+                      <div className="prod-meta" style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{p.brand} · SKU: {p.sku}</div>
+                    </div>
                   </td>
-                  <td>
-                    <div className="prod-cell">
-                      <div className="prod-thumb"><i className="bi bi-box-seam"></i></div>
-                      <div>
-                        <div className="prod-name">{p.name}</div>
-                        <div className="prod-meta">{p.brand} · SKU: {p.sku}</div>
-                      </div>
+                  <td style={{ width: '85px' }}>
+                    <div className="prod-thumb" style={{ width: '72px', height: '72px', flexShrink: 0, overflow: 'hidden', borderRadius: '4px' }}>
+                      {p.image ? (
+                        <img src={p.image} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      ) : (
+                        <div style={{ width: '100%', height: '100%', backgroundColor: '#f3f4f6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                          <i className="bi bi-box-seam"></i>
+                        </div>
+                      )}
                     </div>
                   </td>
                   <td><span className="cat-tag">{p.category}</span></td>

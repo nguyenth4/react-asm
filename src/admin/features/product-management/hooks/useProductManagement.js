@@ -1,12 +1,16 @@
 import { useState, useEffect } from 'react';
 import productService from '../../../../shared/services/productService';
+import categoryService from '../../../../shared/services/categoryService';
+import { generateSlug } from '../../../../shared/utils/format';
 
 export const useProductManagement = () => {
   const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filters, setFilters] = useState({ category: '', brand: '', status: '', sort: 'newest' });
+  const [boxFilter, setBoxFilter] = useState('all'); // all | active | lowStock | outOfStock
   const [selectedIds, setSelectedIds] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
@@ -14,13 +18,18 @@ export const useProductManagement = () => {
   const fetchProducts = async () => {
     try {
       setLoading(true);
-      const data = await productService.getAllProducts();
+      const [data, cats] = await Promise.all([
+        productService.getAllProducts(),
+        categoryService.getAllCategories()
+      ]);
       
+      setCategories(cats);
+
       // Map data to match UI expectations
       const mappedData = data.map(p => ({
         ...p,
-        brand: p.brand_name || 'N/A',
-        category: p.category_name || 'N/A',
+        brand: p.brand || 'N/A',
+        category: p.category_name || cats.find(c => c.id === p.category_id)?.name || 'N/A',
         originalPrice: p.original_price,
         soldCount: p.sold_count || 0,
         isVisible: p.status === 'active'
@@ -29,11 +38,12 @@ export const useProductManagement = () => {
       setProducts(mappedData);
       setFilteredProducts(mappedData);
     } catch (error) {
-      console.error('Failed to fetch products:', error);
+      console.error('Failed to fetch products or categories:', error);
     } finally {
       setLoading(false);
     }
   };
+
 
   useEffect(() => {
     fetchProducts();
@@ -53,13 +63,22 @@ export const useProductManagement = () => {
       result = result.filter(p => filters.status === 'active' ? p.status === 'active' : p.status !== 'active');
     }
     
+    // Áp dụng bộ lọc từ 4 ô thống kê
+    if (boxFilter === 'active') {
+      result = result.filter(p => p.isVisible);
+    } else if (boxFilter === 'lowStock') {
+      result = result.filter(p => p.stock > 0 && p.stock <= 20);
+    } else if (boxFilter === 'outOfStock') {
+      result = result.filter(p => p.stock === 0);
+    }
+    
     // Sort logic
     if (filters.sort === 'price_asc') result.sort((a, b) => a.price - b.price);
     else if (filters.sort === 'price_desc') result.sort((a, b) => b.price - a.price);
     else if (filters.sort === 'stock_asc') result.sort((a, b) => a.stock - b.stock);
 
     setFilteredProducts(result);
-  }, [products, searchTerm, filters]);
+  }, [products, searchTerm, filters, boxFilter]);
 
   const toggleSelectAll = (checked) => {
     if (checked) setSelectedIds(filteredProducts.map(p => p.id));
@@ -92,10 +111,35 @@ export const useProductManagement = () => {
   };
 
   const saveProduct = async (productData) => {
-    // Chức năng lưu thực tế sẽ được làm sau, hiện tại reload lại danh sách
-    await fetchProducts();
-    closeModal();
+    try {
+      let payload = {
+        ...productData,
+        status: productData.isVisible ? 'active' : 'inactive',
+        original_price: productData.originalPrice || null
+      };
+
+      if (!payload.slug) {
+        payload.slug = generateSlug(payload.name);
+      }
+
+      if (editingProduct?.id) {
+        // Cập nhật
+        await productService.updateProduct(editingProduct.id, payload);
+        alert('Cập nhật sản phẩm thành công!');
+      } else {
+        // Thêm mới
+        await productService.createProduct(payload);
+        alert('Thêm sản phẩm thành công!');
+      }
+      
+      await fetchProducts();
+      closeModal();
+    } catch (error) {
+      console.error('Save product error:', error);
+      alert('Lỗi: ' + (error.response?.data?.message || error.response?.data?.error || error.message));
+    }
   };
+
 
   const deleteSelected = async () => {
     if (window.confirm(`Xóa ${selectedIds.length} sản phẩm đã chọn?`)) {
@@ -106,12 +150,15 @@ export const useProductManagement = () => {
 
   return {
     products,
+    categories,
     loading,
     filteredProducts,
     searchTerm,
     setSearchTerm,
     filters,
     setFilters,
+    boxFilter,
+    setBoxFilter,
     selectedIds,
     showModal,
     editingProduct,

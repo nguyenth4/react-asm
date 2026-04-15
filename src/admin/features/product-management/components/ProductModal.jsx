@@ -1,7 +1,26 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
-const ProductModal = ({ isOpen, onClose, onSave, editingProduct }) => {
+const ProductModal = ({ isOpen, onClose, onSave, editingProduct, categories = [] }) => {
+  const [imagePreview, setImagePreview] = useState('');
+
+  useEffect(() => {
+    if (isOpen) {
+      setImagePreview(editingProduct?.image || '');
+    }
+  }, [isOpen, editingProduct]);
+
   if (!isOpen) return null;
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -10,7 +29,8 @@ const ProductModal = ({ isOpen, onClose, onSave, editingProduct }) => {
       name: formData.get('name'),
       sku: formData.get('sku'),
       brand: formData.get('brand'),
-      category: formData.get('category'),
+      category_id: Number(formData.get('category_id')),
+      image: imagePreview,
       price: Number(formData.get('price')),
       originalPrice: Number(formData.get('originalPrice')) || null,
       stock: Number(formData.get('stock')),
@@ -29,16 +49,31 @@ const ProductModal = ({ isOpen, onClose, onSave, editingProduct }) => {
           </div>
           
           <div className="mbody">
-            <div className="img-upload" onClick={() => alert('Chọn ảnh từ máy tính...')}>
-              <div style={{ fontSize: '32px', color: 'var(--pink-400)', marginBottom: '10px' }}>
-                <i className="bi bi-cloud-arrow-up"></i>
-              </div>
-              <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-dark)' }}>
-                Chọn ảnh sản phẩm hoặc kéo thả vào đây
-              </div>
-              <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '5px' }}>
-                Định dạng JPG, PNG, WEBP (Tối đa 5MB)
-              </div>
+            <div className="img-upload" style={{ position: 'relative', overflow: 'hidden' }}>
+              <input 
+                type="file" 
+                accept="image/*" 
+                onChange={handleImageChange} 
+                style={{ 
+                  position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', 
+                  opacity: 0, cursor: 'pointer', zIndex: 2 
+                }} 
+              />
+              {imagePreview ? (
+                <img src={imagePreview} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'contain', position: 'absolute', top: 0, left: 0, zIndex: 1 }} />
+              ) : (
+                <>
+                  <div style={{ fontSize: '32px', color: 'var(--pink-400)', marginBottom: '10px' }}>
+                    <i className="bi bi-cloud-arrow-up"></i>
+                  </div>
+                  <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-dark)' }}>
+                    Nhấn vào đây để tải ảnh lên
+                  </div>
+                  <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '5px' }}>
+                    Định dạng JPG, PNG, WEBP
+                  </div>
+                </>
+              )}
             </div>
 
             <div className="m-row">
@@ -58,12 +93,12 @@ const ProductModal = ({ isOpen, onClose, onSave, editingProduct }) => {
                 <input className="m-input" name="brand" defaultValue={editingProduct?.brand} placeholder="Ví dụ: MAC, Dior..." />
               </div>
               <div className="m-group">
-                <label className="m-label">Danh mục</label>
-                <select className="m-select" name="category" defaultValue={editingProduct?.category || 'Son môi'}>
-                  <option value="Son môi">Son môi</option>
-                  <option value="Phấn má">Phấn má</option>
-                  <option value="Mắt">Mắt</option>
-                  <option value="Dưỡng da">Dưỡng da</option>
+                <label className="m-label">Danh mục *</label>
+                <select className="m-select" name="category_id" defaultValue={editingProduct?.category_id || ''} required>
+                  <option value="" disabled>-- Chọn danh mục --</option>
+                  {categories.map(c => (
+                    <option key={c.id} value={c.id}>{c.name}</option>
+                  ))}
                 </select>
               </div>
             </div>
