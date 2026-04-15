@@ -1,62 +1,53 @@
 import React from 'react';
-import { formatPrice, formatDate } from '../../../../shared/utils/format';
 
 const UserTable = ({ customers, onViewProfile }) => {
-  const tierLabels = { gold: '★ Vàng', silver: '◆ Bạc', bronze: '▲ Đồng' };
-  const tierClass = { gold: 'tier-gold', silver: 'tier-silver', bronze: 'tier-bronze' };
-
   return (
     <div className="data-table">
       <div className="admin-table-wrap">
         <table className="admin-table">
           <thead>
             <tr>
-              <th>Khách hàng</th>
-              <th>Email</th>
-              <th>Điện thoại</th>
-              <th>Vai trò</th>
-              <th>Hạng</th>
-              <th>Điểm</th>
-              <th>Tổng đơn</th>
-              <th>Chi tiêu</th>
-              <th>Ngày gia nhập</th>
-              <th>Thao tác</th>
+              <th style={{ textTransform: 'uppercase', fontSize: '13px', padding: '16px 20px', color: '#888' }}>Họ Tên</th>
+              <th style={{ textTransform: 'uppercase', fontSize: '13px', padding: '16px 20px', color: '#888' }}>Email</th>
+              <th style={{ textTransform: 'uppercase', fontSize: '13px', padding: '16px 20px', color: '#888' }}>Vai trò</th>
+              <th style={{ textTransform: 'uppercase', fontSize: '13px', padding: '16px 20px', color: '#888' }}>Hành động</th>
             </tr>
           </thead>
           <tbody>
             {customers.map(c => (
               <tr key={c.id}>
-                <td>
+                <td style={{ padding: '16px 20px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                     <div className="cust-av2" style={{ background: c.color }}>{c.avatar}</div>
                     <div style={{ fontWeight: 600, color: 'var(--text-dark)' }}>{c.name}</div>
                   </div>
                 </td>
-                <td style={{ color: 'var(--text-muted)', fontSize: '12px' }}>{c.email}</td>
-                <td style={{ color: 'var(--text-muted)', fontSize: '12px' }}>{c.phone}</td>
-                <td>
+                <td style={{ padding: '16px 20px', color: 'var(--text-muted)', fontSize: '13px' }}>{c.email}</td>
+                <td style={{ padding: '16px 20px' }}>
                   <span style={{ 
-                    fontSize: '11px', 
-                    padding: '2px 8px', 
-                    borderRadius: '10px', 
+                    fontSize: '12px', 
+                    padding: '4px 10px', 
+                    borderRadius: '12px', 
                     backgroundColor: c.role === 'admin' ? '#FEE2E2' : '#E0F2FE',
                     color: c.role === 'admin' ? '#991B1B' : '#0369A1',
                     fontWeight: 600
                   }}>
-                    {c.role === 'admin' ? 'Quản trị' : 'Thành viên'}
+                    {c.role === 'admin' ? 'Quản trị viên' : 'Thành viên'}
                   </span>
                 </td>
-                <td><span className={`tier-badge ${tierClass[c.tier]}`}>{tierLabels[c.tier]}</span></td>
-                <td style={{ fontWeight: 600 }}>{c.points.toLocaleString()}</td>
-                <td style={{ fontWeight: 600, color: 'var(--blue)' }}>{c.orders}</td>
-                <td style={{ fontWeight: 600, color: 'var(--pink-500)' }}>{formatPrice(c.spent)}</td>
-                <td style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{formatDate(c.joined)}</td>
-                <td>
+                <td style={{ padding: '16px 20px' }}>
                   <div className="action-btns">
-                    <div className="abt" title="Xem" onClick={() => onViewProfile(c)}>
-                      <i className="bi bi-eye"></i>
-                    </div>
-                    <div className="abt" title="Email"><i className="bi bi-envelope"></i></div>
+                    <button 
+                      title="Xem chi tiết" 
+                      onClick={() => onViewProfile(c)}
+                      style={{
+                         background: '#f8fafc', border: '1px solid #cbd5e1',
+                         padding: '6px 12px', borderRadius: '6px', color: '#334155', cursor: 'pointer',
+                         fontWeight: 500, fontSize: '13px', display: 'flex', alignItems: 'center', gap: '6px'
+                      }}
+                    >
+                      <i className="bi bi-eye"></i> Xem
+                    </button>
                   </div>
                 </td>
               </tr>

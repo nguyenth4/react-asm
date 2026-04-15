@@ -9,7 +9,7 @@ const CategoryModal = ({ isOpen, onClose, onSave, editingCategory }) => {
     onSave({
       name: formData.get('name'),
       slug: formData.get('slug'),
-      status: formData.get('status') === 'on'
+      status: true // Mặc định luôn kích hoạt vì checkbox đã bị ẩn đi
     });
   };
 
@@ -29,17 +29,6 @@ const CategoryModal = ({ isOpen, onClose, onSave, editingCategory }) => {
             <div className="m-group" style={{ marginBottom: '20px' }}>
               <label className="m-label">Đường dẫn (Slug)</label>
               <input className="m-input" name="slug" defaultValue={editingCategory?.slug} placeholder="nuoc-hoa" />
-            </div>
-            <div className="m-group">
-              <label className="m-label" style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
-                <input 
-                  type="checkbox" 
-                  name="status"
-                  defaultChecked={editingCategory ? editingCategory.status : true} 
-                  style={{ width: '17px', height: '17px' }} 
-                />
-                <span>Kích hoạt danh mục</span>
-              </label>
             </div>
           </div>
           <div className="mfoot">

@@ -15,14 +15,10 @@ export const useUserManagement = () => {
       // Map data to match UI expectations if needed
       const mappedData = data.map(u => ({
         ...u,
-        name: u.last_name ? `${u.first_name} ${u.last_name}` : u.first_name,
-        avatar: (u.first_name?.charAt(0) || 'U'),
+        name: u.lastName ? `${u.firstName} ${u.lastName}` : (u.firstName || 'Không rõ'),
+        avatar: (u.firstName?.charAt(0) || 'U').toUpperCase(),
         color: '#378ADD',
-        tier: 'bronze', // Default tier
-        points: 0,      // Default points
-        spent: parseFloat(u.total_spent || 0),
-        orders: u.order_count || 0,
-        joined: u.created_at
+        joined: u.createdAt || u.created_at
       }));
       setCustomers(mappedData);
     } catch (error) {

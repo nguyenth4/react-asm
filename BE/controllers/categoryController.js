@@ -69,6 +69,9 @@ class CategoryController {
             });
         } catch (error) {
             console.error('Error creating category:', error);
+            if (error.name === 'SequelizeUniqueConstraintError') {
+                return res.status(400).json({ error: "Đường dẫn (Slug) đã tồn tại. Vui lòng sử dụng tên hoặc đường dẫn khác!" });
+            }
             const message = error.errors ? error.errors.map(e => e.message).join(', ') : error.message;
             res.status(500).json({ error: message });
         }
@@ -99,6 +102,9 @@ class CategoryController {
             });
         } catch (error) {
             console.error('Error updating category:', error);
+            if (error.name === 'SequelizeUniqueConstraintError') {
+                return res.status(400).json({ error: "Đường dẫn (Slug) đã tồn tại. Vui lòng sử dụng đường dẫn khác!" });
+            }
             const message = error.errors ? error.errors.map(e => e.message).join(', ') : error.message;
             res.status(500).json({ error: message });
         }
