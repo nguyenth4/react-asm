@@ -16,15 +16,15 @@ function App() {
   const [cartItems, setCartItems] = useState([]);
 
   // ── Cart logic ──────────────────────────────────────────
-  const addToCart = (product) => {
+  const addToCart = (product, qty = 1) => {
     setCartItems((prev) => {
       const existing = prev.find((item) => item.id === product.id);
       if (existing) {
         return prev.map((item) =>
-          item.id === product.id ? { ...item, qty: item.qty + 1 } : item
+          item.id === product.id ? { ...item, qty: item.qty + qty } : item
         );
       }
-      return [...prev, { ...product, qty: 1 }];
+      return [...prev, { ...product, qty: qty }];
     });
   };
 

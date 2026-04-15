@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import categoryService from '../../../../shared/services/categoryService';
 
-const Categories = ({ onCategoryClick }) => {
+const Categories = ({ onCategorySelect, selectedCategory, onSeeAllClick }) => {
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
@@ -37,14 +37,14 @@ const Categories = ({ onCategoryClick }) => {
           <div className="section-label">✦ Khám phá</div>
           <h2 className="section-title">Danh mục <em>sản phẩm</em></h2>
         </div>
-        <button className="see-all" onClick={onCategoryClick}>Xem tất cả →</button>
+        <button className="see-all" onClick={onSeeAllClick}>Xem tất cả →</button>
       </div>
       <div className="cat-grid">
         {categories.map((cat, index) => (
           <div 
             key={cat.id} 
-            className={`cat-card ${getTheme(index)}`} 
-            onClick={onCategoryClick}
+            className={`cat-card ${getTheme(index)} ${selectedCategory === cat.slug ? 'is-selected' : ''}`} 
+            onClick={() => onCategorySelect(cat.slug)}
           >
             <span className="cat-card__icon">{getIcon(cat.name)}</span>
             <div className="cat-card__name">{cat.name}</div>

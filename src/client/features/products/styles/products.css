@@ -82,7 +82,8 @@
   color: var(--color-dark);
 }
 
-.filter-item input[type="checkbox"] {
+.filter-item input[type="checkbox"],
+.filter-item input[type="radio"] {
   accent-color: var(--color-blush);
   width: 18px;
   height: 18px;

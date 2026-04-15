@@ -4,17 +4,33 @@ import ProductList from './components/ProductList';
 import './styles/products.css';
 
 import productService from '../../../shared/services/productService';
+import categoryService from '../../../shared/services/categoryService';
 
 const ProductsPage = ({ onProductClick, onAddToCart }) => {
   const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState('all');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const data = await categoryService.getAllCategories();
+        setCategories(data);
+      } catch (err) {
+        console.error('Failed to fetch categories:', err);
+      }
+    };
+    fetchCategories();
+  }, []);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        const data = await productService.getAllProducts();
+        const params = selectedCategory !== 'all' ? { category: selectedCategory } : {};
+        const data = await productService.getAllProducts(params);
         setProducts(data);
         setLoading(false);
       } catch (err) {
@@ -25,7 +41,11 @@ const ProductsPage = ({ onProductClick, onAddToCart }) => {
     };
 
     fetchProducts();
-  }, []);
+  }, [selectedCategory]);
+
+  const handleCategoryChange = (slug) => {
+    setSelectedCategory(slug);
+  };
 
   if (loading) return <div className="products-loading">Đang tải sản phẩm...</div>;
   if (error) return <div className="products-error">{error}</div>;
@@ -33,7 +53,11 @@ const ProductsPage = ({ onProductClick, onAddToCart }) => {
   return (
     <div className="products-layout">
       <aside className="products-sidebar">
-        <ProductFilter />
+        <ProductFilter 
+          categories={categories} 
+          selectedCategory={selectedCategory}
+          onCategoryChange={handleCategoryChange}
+        />
       </aside>
       
       <main className="products-main">

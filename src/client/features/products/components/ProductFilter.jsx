@@ -1,59 +1,29 @@
 import React from 'react';
 
-const ProductFilter = () => {
+const ProductFilter = ({ categories, selectedCategory, onCategoryChange }) => {
   return (
     <div className="filter-card">
       <div className="filter-section">
         <span className="filter-title">Danh Mục</span>
         <div className="filter-list">
           <label className="filter-item">
-            <input type="checkbox" defaultChecked /> Tất cả
+            <input 
+              type="radio" 
+              name="category"
+              checked={selectedCategory === 'all'} 
+              onChange={() => onCategoryChange('all')}
+            /> Tất cả
           </label>
-          <label className="filter-item">
-            <input type="checkbox" /> Chăm sóc da (Skincare)
-          </label>
-          <label className="filter-item">
-            <input type="checkbox" /> Nước hoa (Fragrance)
-          </label>
-          <label className="filter-item">
-            <input type="checkbox" /> Son môi (Lips)
-          </label>
-          <label className="filter-item">
-            <input type="checkbox" /> Đánh mắt (Eyes)
-          </label>
-          <label className="filter-item">
-            <input type="checkbox" /> Kem nền (Face)
-          </label>
-        </div>
-      </div>
-      
-      <div className="filter-section">
-        <span className="filter-title">Khoảng Giá</span>
-        <div className="filter-list">
-          <label className="filter-item">
-            <input type="checkbox" /> Dưới 300.000đ
-          </label>
-          <label className="filter-item">
-            <input type="checkbox" /> 300.000đ - 600.000đ
-          </label>
-          <label className="filter-item">
-            <input type="checkbox" /> 600.000đ - 1.000.000đ
-          </label>
-          <label className="filter-item">
-            <input type="checkbox" /> Trên 1.000.000đ
-          </label>
-        </div>
-      </div>
-
-      <div className="filter-section">
-        <span className="filter-title">Khác</span>
-        <div className="filter-list">
-          <label className="filter-item">
-            <input type="checkbox" /> Khuyến mãi (Sale)
-          </label>
-          <label className="filter-item">
-            <input type="checkbox" /> Hàng mới (New)
-          </label>
+          {categories.map((cat) => (
+            <label className="filter-item" key={cat.id}>
+              <input 
+                type="radio" 
+                name="category"
+                checked={selectedCategory === cat.slug}
+                onChange={() => onCategoryChange(cat.slug)}
+              /> {cat.name}
+            </label>
+          ))}
         </div>
       </div>
     </div>

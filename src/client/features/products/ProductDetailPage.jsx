@@ -3,12 +3,19 @@ import { formatCurrency } from '../../../shared/utils/format';
 import productService from '../../../shared/services/productService';
 import './styles/product-detail.css';
 
-const ProductDetailPage = ({ productId, onBack }) => {
+const ProductDetailPage = ({ productId, onBack, onAddToCart }) => {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState('description');
+
+  const handleAddToCart = () => {
+    if (onAddToCart && product) {
+      onAddToCart(product, quantity);
+      alert(`Đã thêm ${quantity} sản phẩm "${product.name}" vào giỏ hàng!`);
+    }
+  };
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -115,15 +122,28 @@ const ProductDetailPage = ({ productId, onBack }) => {
             {product.description}
           </p>
 
-          <div className="product-actions">
-            <div className="quantity-selector">
-              <button onClick={handleDecrease} className="btn-qty">-</button>
-              <input type="number" value={quantity} readOnly />
-              <button onClick={handleIncrease} className="btn-qty">+</button>
+          <div className="product-actions-group">
+            <div className="quantity-row">
+              <span className="qty-label">Số lượng:</span>
+              <div className="quantity-selector">
+                <button onClick={handleDecrease} className="btn-qty">-</button>
+                <input type="number" value={quantity} readOnly />
+                <button onClick={handleIncrease} className="btn-qty">+</button>
+              </div>
+              <span className="stock-info">Còn {product.stock || 46} sản phẩm</span>
             </div>
-            <button className="btn-add-to-cart-large">
-              Thêm vào giỏ - {formatCurrency(product.price * quantity)}
-            </button>
+
+            <div className="main-actions">
+              <button className="btn-add-cart-alt" onClick={handleAddToCart}>
+                <i className="bi bi-cart-plus"></i> THÊM VÀO GIỎ
+              </button>
+              <button className="btn-buy-now" onClick={() => alert('Chức năng mua ngay đang phát triển')}>
+                MUA NGAY
+              </button>
+              <button className="btn-action-icon">
+                <i className="bi bi-share"></i>
+              </button>
+            </div>
           </div>
 
           <div className="product-perks">
