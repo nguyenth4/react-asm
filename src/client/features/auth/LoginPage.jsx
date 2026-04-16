@@ -1,31 +1,31 @@
 import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 import authService from '../../../shared/services/authService';
 import './styles/Auth.css';
 
+const loginSchema = yup.object().shape({
+  email: yup.string().required('Vui lòng nhập email').email('Email không hợp lệ'),
+  password: yup.string().required('Vui lòng nhập mật khẩu').min(6, 'Mật khẩu phải ít nhất 6 ký tự'),
+});
+
 const LoginPage = ({ onNavigate, onLoginSuccess }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [errorMsg, setErrorMsg] = useState('');
+  const [serverError, setServerError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const togglePw = () => {
-    setShowPassword(!showPassword);
-  };
+  const { register, handleSubmit, formState: { errors } } = useForm({
+    resolver: yupResolver(loginSchema)
+  });
 
-  const doLogin = async () => {
-    const trimmedEmail = email.trim();
-    const trimmedPass = password.trim();
+  const togglePw = () => setShowPassword(!showPassword);
 
-    if (!trimmedEmail || !trimmedPass) {
-      setErrorMsg('Vui lòng nhập đầy đủ thông tin.');
-      return;
-    }
-
+  const onSubmit = async (data) => {
     try {
       setLoading(true);
-      setErrorMsg('');
-      const response = await authService.login(trimmedEmail, trimmedPass);
+      setServerError('');
+      const response = await authService.login(data.email, data.password);
       
       const { user } = response;
       localStorage.setItem('bb_user', JSON.stringify(user));
@@ -35,15 +35,9 @@ const LoginPage = ({ onNavigate, onLoginSuccess }) => {
       }
     } catch (error) {
       const msg = error.response?.data?.message || 'Đăng nhập thất bại. Vui lòng thử lại.';
-      setErrorMsg(msg);
+      setServerError(msg);
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      doLogin();
     }
   };
 
@@ -78,43 +72,46 @@ const LoginPage = ({ onNavigate, onLoginSuccess }) => {
             <span className="divider__line"></span>
           </div>
 
-          {errorMsg && <div className="error-msg">{errorMsg}</div>}
+          <form onSubmit={handleSubmit(onSubmit)} noValidate>
+            {serverError && <div className="error-msg" style={{ marginBottom: '15px' }}>{serverError}</div>}
 
-          <div className="form-group">
-            <label className="form-label">Email</label>
-            <input 
-              className="form-input" 
-              type="email" 
-              placeholder="lananh@email.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              onKeyDown={handleKeyDown}
-            />
-          </div>
-
-          <div className="form-group">
-            <label className="form-label">Mật khẩu</label>
-            <div className="form-input-wrap">
+            <div className="form-group">
+              <label className="form-label">Email</label>
               <input 
-                className="form-input" 
-                type={showPassword ? 'text' : 'password'} 
-                placeholder="••••••••" 
-                style={{ paddingRight: '44px' }}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                onKeyDown={handleKeyDown}
+                className={`form-input ${errors.email ? 'input-error' : ''}`}
+                type="email" 
+                placeholder="lananh@email.com"
+                {...register('email')}
               />
-              <button className="toggle-pw" onClick={togglePw}>
-                <i className={`bi ${showPassword ? 'bi-eye-slash' : 'bi-eye'}`}></i>
-              </button>
+              {errors.email && <span className="field-error">{errors.email.message}</span>}
             </div>
-          </div>
 
-          <div style={{ textAlign: 'right', marginBottom: '18px' }}>
-            <a className="forgot-link" href="#!">Quên mật khẩu?</a>
-          </div>
+            <div className="form-group">
+              <label className="form-label">Mật khẩu</label>
+              <div className="form-input-wrap">
+                <input 
+                  className={`form-input ${errors.password ? 'input-error' : ''}`}
+                  type={showPassword ? 'text' : 'password'} 
+                  placeholder="••••••••" 
+                  style={{ paddingRight: '44px' }}
+                  {...register('password')}
+                />
+                <button type="button" className="toggle-pw" onClick={togglePw}>
+                  <i className={`bi ${showPassword ? 'bi-eye-slash' : 'bi-eye'}`}></i>
+                </button>
+              </div>
+              {errors.password && <span className="field-error">{errors.password.message}</span>}
+            </div>
 
-          <button className="btn-submit" onClick={doLogin}>Đăng nhập <i className="bi bi-arrow-right" style={{ marginLeft: '8px' }}></i></button>
+            <div style={{ textAlign: 'right', marginBottom: '18px' }}>
+              <a className="forgot-link" href="#!">Quên mật khẩu?</a>
+            </div>
+
+            <button type="submit" className="btn-submit" disabled={loading}>
+              {loading ? 'Đang xử lý...' : 'Đăng nhập'} 
+              <i className="bi bi-arrow-right" style={{ marginLeft: '8px' }}></i>
+            </button>
+          </form>
           
           <p className="auth-switch">Chưa có tài khoản? <a onClick={() => onNavigate('register')}>Đăng ký ngay</a></p>
         </div>

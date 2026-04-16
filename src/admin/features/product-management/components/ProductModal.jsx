@@ -1,13 +1,39 @@
 import React, { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+
+const productSchema = yup.object().shape({
+  name: yup.string().required('Vui lòng nhập tên sản phẩm'),
+  brand: yup.string(),
+  category_id: yup.string().required('Vui lòng chọn danh mục'),
+  price: yup.number().typeError('Giá bán phải là số').required('Vui lòng nhập giá').min(0, 'Giá không thể âm'),
+  originalPrice: yup.number().nullable().transform((value, originalValue) => originalValue === '' ? null : value).typeError('Giá gốc phải là số').min(0, 'Giá gốc không thể âm'),
+  stock: yup.number().typeError('Số lượng phải là số').required('Vui lòng nhập số lượng').min(0, 'Số lượng không thể âm'),
+  isVisible: yup.boolean()
+});
 
 const ProductModal = ({ isOpen, onClose, onSave, editingProduct, categories = [] }) => {
   const [imagePreview, setImagePreview] = useState('');
 
+  const { register, handleSubmit, reset, formState: { errors } } = useForm({
+    resolver: yupResolver(productSchema)
+  });
+
   useEffect(() => {
     if (isOpen) {
       setImagePreview(editingProduct?.image || '');
+      reset({
+        name: editingProduct?.name || '',
+        brand: editingProduct?.brand || '',
+        category_id: editingProduct?.category_id?.toString() || '',
+        price: editingProduct?.price || 0,
+        originalPrice: editingProduct?.originalPrice || null,
+        stock: editingProduct?.stock || 0,
+        isVisible: editingProduct ? editingProduct.isVisible : true
+      });
     }
-  }, [isOpen, editingProduct]);
+  }, [isOpen, editingProduct, reset]);
 
   if (!isOpen) return null;
 
@@ -22,33 +48,25 @@ const ProductModal = ({ isOpen, onClose, onSave, editingProduct, categories = []
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const productData = {
-      name: formData.get('name'),
-      brand: formData.get('brand'),
-      category_id: Number(formData.get('category_id')),
-      image: imagePreview,
-      price: Number(formData.get('price')),
-      originalPrice: Number(formData.get('originalPrice')) || null,
-      stock: Number(formData.get('stock')),
-      isVisible: formData.get('isVisible') === 'on'
-    };
-    onSave(productData);
+  const onSubmit = (data) => {
+    onSave({
+      ...data,
+      category_id: Number(data.category_id),
+      image: imagePreview
+    });
   };
 
   return (
     <div className="modal-overlay show" onClick={onClose}>
       <div className="modal" onClick={e => e.stopPropagation()}>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <div className="mhead">
             <div className="mtitle">{editingProduct ? 'Chỉnh sửa sản phẩm' : 'Thêm sản phẩm mới'}</div>
             <div className="mclose" onClick={onClose}>×</div>
           </div>
           
           <div className="mbody">
-            <div className="img-upload" style={{ position: 'relative', overflow: 'hidden' }}>
+            <div className={`img-upload ${!imagePreview ? 'has-error' : ''}`} style={{ position: 'relative', overflow: 'hidden' }}>
               <input 
                 type="file" 
                 accept="image/*" 
@@ -77,44 +95,85 @@ const ProductModal = ({ isOpen, onClose, onSave, editingProduct, categories = []
 
             <div className="m-group">
               <label className="m-label">Tên sản phẩm *</label>
-              <input className="m-input" name="name" defaultValue={editingProduct?.name} placeholder="Nhập tên sản phẩm..." required />
+              <input 
+                className={`m-input ${errors.name ? 'input-error' : ''}`} 
+                name="name" 
+                placeholder="Nhập tên sản phẩm..." 
+                {...register('name')}
+              />
+              {errors.name && <span className="field-error">{errors.name.message}</span>}
             </div>
 
             <div className="m-row">
               <div className="m-group">
                 <label className="m-label">Thương hiệu</label>
-                <input className="m-input" name="brand" defaultValue={editingProduct?.brand} placeholder="Ví dụ: MAC, Dior..." />
+                <input 
+                  className={`m-input ${errors.brand ? 'input-error' : ''}`} 
+                  name="brand" 
+                  placeholder="Ví dụ: MAC, Dior..." 
+                  {...register('brand')}
+                />
+                {errors.brand && <span className="field-error">{errors.brand.message}</span>}
               </div>
               <div className="m-group">
                 <label className="m-label">Danh mục *</label>
-                <select className="m-select" name="category_id" defaultValue={editingProduct?.category_id || ''} required>
-                  <option value="" disabled>-- Chọn danh mục --</option>
+                <select 
+                  className={`m-select ${errors.category_id ? 'input-error' : ''}`} 
+                  name="category_id" 
+                  {...register('category_id')}
+                >
+                  <option value="">-- Chọn danh mục --</option>
                   {categories.map(c => (
                     <option key={c.id} value={c.id}>{c.name}</option>
                   ))}
                 </select>
+                {errors.category_id && <span className="field-error">{errors.category_id.message}</span>}
               </div>
             </div>
 
             <div className="m-row">
               <div className="m-group">
                 <label className="m-label">Giá bán hiện tại (VND) *</label>
-                <input className="m-input" type="number" name="price" defaultValue={editingProduct?.price} required />
+                <input 
+                  className={`m-input ${errors.price ? 'input-error' : ''}`} 
+                  type="number" 
+                  name="price" 
+                  {...register('price')}
+                />
+                {errors.price && <span className="field-error">{errors.price.message}</span>}
               </div>
               <div className="m-group">
                 <label className="m-label">Giá gốc (nếu có)</label>
-                <input className="m-input" type="number" name="originalPrice" defaultValue={editingProduct?.originalPrice} placeholder="Dùng để tính giảm giá" />
+                <input 
+                  className={`m-input ${errors.originalPrice ? 'input-error' : ''}`} 
+                  type="number" 
+                  name="originalPrice" 
+                  placeholder="Dùng để tính giảm giá" 
+                  {...register('originalPrice')}
+                />
+                {errors.originalPrice && <span className="field-error">{errors.originalPrice.message}</span>}
               </div>
             </div>
 
             <div className="m-row">
               <div className="m-group">
                 <label className="m-label">Số lượng tồn kho *</label>
-                <input className="m-input" type="number" name="stock" defaultValue={editingProduct?.stock} required />
+                <input 
+                  className={`m-input ${errors.stock ? 'input-error' : ''}`} 
+                  type="number" 
+                  name="stock" 
+                  {...register('stock')}
+                />
+                {errors.stock && <span className="field-error">{errors.stock.message}</span>}
               </div>
               <div className="m-group" style={{ justifyContent: 'center' }}>
                 <label className="m-label" style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', marginTop: '12px' }}>
-                  <input type="checkbox" name="isVisible" defaultChecked={editingProduct ? editingProduct.isVisible : true} style={{ width: '18px', height: '18px', accentColor: 'var(--pink-500)' }} />
+                  <input 
+                    type="checkbox" 
+                    name="isVisible" 
+                    style={{ width: '18px', height: '18px', accentColor: 'var(--pink-500)' }} 
+                    {...register('isVisible')}
+                  />
                   <span>Hiển thị trên cửa hàng</span>
                 </label>
               </div>

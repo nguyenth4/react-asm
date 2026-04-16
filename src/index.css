@@ -80,6 +80,21 @@ textarea {
   --radius-md: 12px;
   --radius-lg: 16px;
   --radius-pill: 50px;
+  --error-red: #E24B4A;
+}
+
+.field-error {
+  color: var(--error-red);
+  font-size: 12px;
+  margin-top: 4px;
+  font-weight: 500;
+  display: block;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* ── UTILITIES ── */

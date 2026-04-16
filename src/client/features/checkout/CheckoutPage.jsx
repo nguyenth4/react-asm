@@ -1,29 +1,52 @@
 import React, { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 import orderService from '../../../shared/services/orderService';
 
+const checkoutSchema = yup.object().shape({
+  fullName: yup.string().required('Vui lòng nhập họ và tên'),
+  email: yup.string().required('Vui lòng nhập email').email('Email không hợp lệ'),
+  phone: yup.string().required('Vui lòng nhập số điện thoại').matches(/^[0-9]+$/, 'Số điện thoại chỉ bao gồm chữ số'),
+  address: yup.string().required('Vui lòng nhập địa chỉ nhận hàng'),
+  shippingAddress: yup.boolean(),
+  otherAddress: yup.string().when('shippingAddress', {
+    is: true,
+    then: (schema) => schema.required('Vui lòng nhập địa chỉ giao hàng khác'),
+    otherwise: (schema) => schema.notRequired()
+  }),
+  paymentMethod: yup.string().required('Vui lòng chọn phương thức thanh toán'),
+  acceptTerms: yup.boolean().oneOf([true], 'Bạn cần đồng ý với điều khoản của chúng tôi')
+});
+
 const CheckoutPage = ({ onNavigate, cartItems = [], user, onClearCart }) => {
-  const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    phone: '',
-    address: '',
-    shippingAddress: false,
-    paymentMethod: 'cash'
-  });
   const [loading, setLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState('');
+  const [serverError, setServerError] = useState('');
+
+  const { register, handleSubmit, reset, watch, formState: { errors } } = useForm({
+    resolver: yupResolver(checkoutSchema),
+    defaultValues: {
+      paymentMethod: 'cash',
+      shippingAddress: false,
+      acceptTerms: false
+    }
+  });
+
+  const watchShippingAddress = watch('shippingAddress');
 
   // Tự động điền thông tin user khi có dữ liệu
   useEffect(() => {
     if (user) {
-      setFormData(prev => ({
-        ...prev,
-        fullName: prev.fullName || `${user.first_name} ${user.last_name}`,
+      reset({
+        fullName: `${user.first_name} ${user.last_name}`,
         email: user.email,
-        phone: prev.phone || user.phone || ''
-      }));
+        phone: user.phone || '',
+        paymentMethod: 'cash',
+        shippingAddress: false,
+        acceptTerms: false
+      });
     }
-  }, [user]);
+  }, [user, reset]);
 
   const totalPrice = cartItems.reduce((sum, item) => sum + (item.price * item.qty), 0);
 
@@ -31,33 +54,23 @@ const CheckoutPage = ({ onNavigate, cartItems = [], user, onClearCart }) => {
     return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
   };
 
-  const handleInputChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value
-    }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
+  const onSubmit = async (data) => {
     if (cartItems.length === 0) {
-      setErrorMsg('Giỏ hàng của bạn đang trống.');
+      setServerError('Giỏ hàng của bạn đang trống.');
       return;
     }
 
     try {
       setLoading(true);
-      setErrorMsg('');
+      setServerError('');
 
       const orderData = {
         user_id: user ? user.id : null,
-        customer_name: formData.fullName,
-        email: formData.email,
-        phone: formData.phone,
-        shipping_address: formData.address,
-        payment_method: formData.paymentMethod,
+        customer_name: data.fullName,
+        email: data.email,
+        phone: data.phone,
+        shipping_address: data.shippingAddress ? data.otherAddress : data.address,
+        payment_method: data.paymentMethod,
         total_price: totalPrice,
         items: cartItems.map(item => ({
           product_id: item.id,
@@ -66,17 +79,15 @@ const CheckoutPage = ({ onNavigate, cartItems = [], user, onClearCart }) => {
         }))
       };
 
-      const response = await orderService.createOrder(orderData);
+      await orderService.createOrder(orderData);
       
       alert('Đặt hàng thành công! Cảm ơn bạn đã mua sắm tại Blush & Bloom. 🎉');
       
-      // Xóa giỏ hàng
       if (onClearCart) onClearCart();
-      
       onNavigate('home');
     } catch (error) {
       console.error('Checkout failed:', error);
-      setErrorMsg(error.response?.data?.error || 'Có lỗi xảy ra khi đặt hàng. Vui lòng thử lại.');
+      setServerError(error.response?.data?.error || 'Có lỗi xảy ra khi đặt hàng. Vui lòng thử lại.');
     } finally {
       setLoading(false);
     }
@@ -84,7 +95,6 @@ const CheckoutPage = ({ onNavigate, cartItems = [], user, onClearCart }) => {
 
   return (
     <div className="checkout-page">
-      {/* Page Banner */}
       <div className="page-banner-section">
         <div className="container">
           <div className="page-banner">
@@ -99,41 +109,36 @@ const CheckoutPage = ({ onNavigate, cartItems = [], user, onClearCart }) => {
 
       <div className="checkout-section">
         <div className="container">
-          {errorMsg && (
-            <div style={{ background: '#f8d7da', color: '#721c24', padding: '15px', borderRadius: '8px', marginBottom: '20px', textAlign: 'center' }}>
-              {errorMsg}
-            </div>
-          )}
-          
-          <form className="checkout-grid" onSubmit={handleSubmit}>
-            {/* Cột Trái: Billing Details */}
+          <form className="checkout-grid" onSubmit={handleSubmit(onSubmit)} noValidate>
             <div className="checkout-billing">
               <h4 className="checkout-title">Thông tin giao hàng</h4>
               
+              {serverError && (
+                <div style={{ background: '#f8d7da', color: '#721c24', padding: '15px', borderRadius: '8px', marginBottom: '20px', textAlign: 'center' }}>
+                  {serverError}
+                </div>
+              )}
+
               <div className="checkout-form-group">
                 <label className="checkout-form-label">Họ và tên *</label>
                 <input 
                   type="text" 
-                  name="fullName"
-                  className="checkout-form-input" 
+                  className={`checkout-form-input ${errors.fullName ? 'input-error' : ''}`} 
                   placeholder="Nhập họ và tên của bạn" 
-                  required 
-                  value={formData.fullName}
-                  onChange={handleInputChange}
+                  {...register('fullName')}
                 />
+                {errors.fullName && <span className="field-error">{errors.fullName.message}</span>}
               </div>
 
               <div className="checkout-form-group">
                 <label className="checkout-form-label">Địa chỉ email (Tự động) *</label>
                 <input 
                   type="email" 
-                  name="email"
                   className="checkout-form-input" 
                   placeholder="name@example.com" 
-                  required 
-                  value={formData.email}
                   readOnly
                   style={{ background: '#f8f8f8', cursor: 'not-allowed' }}
+                  {...register('email')}
                 />
                 <small style={{ color: 'var(--text-muted)', fontSize: '11px' }}>Email được lấy từ tài khoản của bạn.</small>
               </div>
@@ -142,50 +147,49 @@ const CheckoutPage = ({ onNavigate, cartItems = [], user, onClearCart }) => {
                 <label className="checkout-form-label">Số điện thoại *</label>
                 <input 
                   type="tel" 
-                  name="phone"
-                  className="checkout-form-input" 
+                  className={`checkout-form-input ${errors.phone ? 'input-error' : ''}`} 
                   placeholder="09xx xxx xxx" 
-                  required 
-                  value={formData.phone}
-                  onChange={handleInputChange}
+                  {...register('phone')}
                 />
+                {errors.phone && <span className="field-error">{errors.phone.message}</span>}
               </div>
 
               <div className="checkout-form-group">
                 <label className="checkout-form-label">Địa chỉ nhận hàng *</label>
                 <input 
                   type="text" 
-                  name="address"
-                  className="checkout-form-input" 
+                  className={`checkout-form-input ${errors.address ? 'input-error' : ''}`} 
                   placeholder="Số nhà, tên đường, phường/xã..." 
-                  required 
-                  value={formData.address}
-                  onChange={handleInputChange}
+                  {...register('address')}
                 />
+                {errors.address && <span className="field-error">{errors.address.message}</span>}
               </div>
 
               <div className="checkout-terms">
                 <input 
                   type="checkbox" 
                   id="shiping_address" 
-                  name="shippingAddress"
-                  checked={formData.shippingAddress}
-                  onChange={handleInputChange}
+                  {...register('shippingAddress')}
                 />
                 <label htmlFor="shiping_address">Giao hàng đến địa chỉ khác?</label>
               </div>
 
-              {formData.shippingAddress && (
+              {watchShippingAddress && (
                 <div style={{ marginTop: '20px', padding: '20px', background: '#fdf2f4', borderRadius: '12px' }}>
                   <p style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Vui lòng nhập ghi chú địa chỉ giao hàng chi tiết bên dưới.</p>
                   <div className="checkout-form-group" style={{ marginTop: '10px' }}>
-                     <input type="text" className="checkout-form-input" placeholder="Địa chỉ giao hàng khác..." />
+                     <input 
+                      type="text" 
+                      className={`checkout-form-input ${errors.otherAddress ? 'input-error' : ''}`} 
+                      placeholder="Địa chỉ giao hàng khác..." 
+                      {...register('otherAddress')}
+                    />
+                    {errors.otherAddress && <span className="field-error">{errors.otherAddress.message}</span>}
                   </div>
                 </div>
               )}
             </div>
 
-            {/* Cột Phải: Order Summary */}
             <div className="checkout-summary">
               <div className="checkout-cart-total">
                 <h4 className="checkout-title">Đơn hàng của bạn <span>Thành tiền</span></h4>
@@ -198,7 +202,7 @@ const CheckoutPage = ({ onNavigate, cartItems = [], user, onClearCart }) => {
                     </li>
                   ))}
                   {cartItems.length === 0 && (
-                    <li>Giỏ hàng trống</li>
+                    <li style={{ textAlign: 'center', padding: '20px', color: 'var(--text-muted)' }}>Giỏ hàng trống</li>
                   )}
                 </ul>
 
@@ -223,14 +227,12 @@ const CheckoutPage = ({ onNavigate, cartItems = [], user, onClearCart }) => {
                     <input 
                       type="radio" 
                       id="payment_cash" 
-                      name="paymentMethod" 
                       value="cash"
-                      checked={formData.paymentMethod === 'cash'}
-                      onChange={handleInputChange}
+                      {...register('paymentMethod')}
                     />
                     <label htmlFor="payment_cash">Thanh toán khi nhận hàng (COD)</label>
-                    {formData.paymentMethod === 'cash' && (
-                      <p>Trả tiền mặt khi giao hàng tận nơi.</p>
+                    {watch('paymentMethod') === 'cash' && (
+                      <p style={{ fontSize: '12px', color: 'var(--text-soft)', marginLeft: '25px' }}>Trả tiền mặt khi giao hàng tận nơi.</p>
                     )}
                   </div>
 
@@ -238,10 +240,8 @@ const CheckoutPage = ({ onNavigate, cartItems = [], user, onClearCart }) => {
                     <input 
                       type="radio" 
                       id="payment_bank" 
-                      name="paymentMethod" 
                       value="bank"
-                      checked={formData.paymentMethod === 'bank'}
-                      onChange={handleInputChange}
+                      {...register('paymentMethod')}
                     />
                     <label htmlFor="payment_bank">Chuyển khoản ngân hàng</label>
                   </div>
@@ -250,18 +250,18 @@ const CheckoutPage = ({ onNavigate, cartItems = [], user, onClearCart }) => {
                     <input 
                       type="radio" 
                       id="payment_paypal" 
-                      name="paymentMethod" 
                       value="paypal"
-                      checked={formData.paymentMethod === 'paypal'}
-                      onChange={handleInputChange}
+                      {...register('paymentMethod')}
                     />
                     <label htmlFor="payment_paypal">Thanh toán qua Ví điện tử</label>
                   </div>
+                  {errors.paymentMethod && <span className="field-error">{errors.paymentMethod.message}</span>}
                 </div>
 
                 <div className="checkout-terms">
-                  <input type="checkbox" id="accept_terms" required />
+                  <input type="checkbox" id="accept_terms" {...register('acceptTerms')} />
                   <label htmlFor="accept_terms" style={{fontSize: '13px'}}>Tôi đã đọc và đồng ý với điều khoản & điều kiện của website *</label>
+                  {errors.acceptTerms && <span className="field-error">{errors.acceptTerms.message}</span>}
                 </div>
 
                 <button 
@@ -307,6 +307,15 @@ const CheckoutPage = ({ onNavigate, cartItems = [], user, onClearCart }) => {
         }
         .checkout-items-list li span {
           font-weight: 600;
+        }
+        .field-error {
+          color: #e24b4a;
+          font-size: 12px;
+          margin-top: 5px;
+          display: block;
+        }
+        .input-error {
+          border-color: #e24b4a !important;
         }
       `}</style>
     </div>

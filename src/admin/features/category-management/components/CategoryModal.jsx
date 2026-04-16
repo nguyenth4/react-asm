@@ -1,14 +1,32 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+
+const categorySchema = yup.object().shape({
+  name: yup.string().required('Vui lòng nhập tên danh mục'),
+  slug: yup.string(),
+});
 
 const CategoryModal = ({ isOpen, onClose, onSave, editingCategory }) => {
+  const { register, handleSubmit, reset, formState: { errors } } = useForm({
+    resolver: yupResolver(categorySchema)
+  });
+
+  useEffect(() => {
+    if (isOpen) {
+      reset({
+        name: editingCategory?.name || '',
+        slug: editingCategory?.slug || ''
+      });
+    }
+  }, [isOpen, editingCategory, reset]);
+
   if (!isOpen) return null;
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
+  const onSubmit = (data) => {
     onSave({
-      name: formData.get('name'),
-      slug: formData.get('slug'),
+      ...data,
       status: true // Mặc định luôn kích hoạt vì checkbox đã bị ẩn đi
     });
   };
@@ -16,7 +34,7 @@ const CategoryModal = ({ isOpen, onClose, onSave, editingCategory }) => {
   return (
     <div className="modal-overlay show" onClick={onClose}>
       <div className="modal" style={{ maxWidth: '500px' }} onClick={e => e.stopPropagation()}>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <div className="mhead">
             <div className="mtitle">{editingCategory ? 'Sửa danh mục' : 'Thêm danh mục mới'}</div>
             <div className="mclose" onClick={onClose}>×</div>
@@ -24,11 +42,23 @@ const CategoryModal = ({ isOpen, onClose, onSave, editingCategory }) => {
           <div className="mbody">
             <div className="m-group" style={{ marginBottom: '20px' }}>
               <label className="m-label">Tên danh mục *</label>
-              <input className="m-input" name="name" defaultValue={editingCategory?.name} placeholder="Ví dụ: Nước hoa..." required />
+              <input 
+                className={`m-input ${errors.name ? 'input-error' : ''}`} 
+                name="name" 
+                placeholder="Ví dụ: Nước hoa..." 
+                {...register('name')}
+              />
+              {errors.name && <span className="field-error">{errors.name.message}</span>}
             </div>
             <div className="m-group" style={{ marginBottom: '20px' }}>
               <label className="m-label">Đường dẫn (Slug)</label>
-              <input className="m-input" name="slug" defaultValue={editingCategory?.slug} placeholder="nuoc-hoa" />
+              <input 
+                className={`m-input ${errors.slug ? 'input-error' : ''}`} 
+                name="slug" 
+                placeholder="nuoc-hoa" 
+                {...register('slug')}
+              />
+              {errors.slug && <span className="field-error">{errors.slug.message}</span>}
             </div>
           </div>
           <div className="mfoot">
