@@ -3,12 +3,10 @@ import React from 'react';
 const AdminSidebar = ({ activePage, onNavigate, onLogout, user }) => {
   const items = [
     { label: 'Dashboard', icon: <i className="bi bi-speedometer2"></i>, key: 'admin_dashboard' },
-    { label: 'Đơn hàng', icon: <i className="bi bi-cart3"></i>, key: 'admin_orders', badge: '5' },
+    { label: 'Đơn hàng', icon: <i className="bi bi-cart3"></i>, key: 'admin_orders' },
     { label: 'Sản phẩm', icon: <i className="bi bi-box-seam"></i>, key: 'admin_products' },
     { label: 'Danh mục', icon: <i className="bi bi-collection"></i>, key: 'admin_categories' },
-    { label: 'Thương hiệu', icon: <i className="bi bi-tags"></i>, key: 'admin_brands' },
-    { label: 'Khách hàng', icon: <i className="bi bi-people"></i>, key: 'admin_customers' },
-    { label: 'Cài đặt', icon: <i className="bi bi-gear"></i>, key: 'admin_settings' },
+    { label: 'Khách hàng', icon: <i className="bi bi-people"></i>, key: 'admin_customers' }
   ];
 
   const renderNav = (navItems) => {
