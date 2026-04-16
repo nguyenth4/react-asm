@@ -49,15 +49,23 @@ const OrderDetailModal = ({ order, isOpen, onClose, onUpdateStatus, getStatusLab
                 <tr><th>Sản phẩm</th><th style={{ textAlign: 'right' }}>Số lượng</th></tr>
               </thead>
               <tbody>
-                {order.items.map((item, idx) => {
-                  const [name, qty] = item.split(' ×');
-                  return (
-                    <tr key={idx}>
-                      <td>{name}</td>
-                      <td style={{ textAlign: 'right', fontWeight: 600 }}>×{qty}</td>
-                    </tr>
-                  );
-                })}
+                {order.items && order.items.length > 0 ? (
+                  order.items.map((item, idx) => {
+                    const [name, qty] = item.split(' ×');
+                    return (
+                      <tr key={idx}>
+                        <td>{name}</td>
+                        <td style={{ textAlign: 'right', fontWeight: 600 }}>×{qty}</td>
+                      </tr>
+                    );
+                  })
+                ) : (
+                  <tr>
+                    <td colSpan="2" style={{ textAlign: 'center', py: 3, color: 'var(--text-soft)' }}>
+                      Không có thông tin sản phẩm
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
             <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

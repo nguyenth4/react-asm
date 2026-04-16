@@ -51,6 +51,14 @@ function App() {
         window.history.replaceState({}, '', '/');
         return 'home';
       }
+      
+      // Phân tích sâu hơn cho sub-pages của admin
+      if (path.includes('/admin/orders')) return 'admin_orders';
+      if (path.includes('/admin/products')) return 'admin_products';
+      if (path.includes('/admin/categories')) return 'admin_categories';
+      if (path.includes('/admin/customers')) return 'admin_customers';
+      if (path.includes('/admin/dashboard')) return 'admin_dashboard';
+      
       return 'admin_dashboard';
     }
 
@@ -74,7 +82,12 @@ function App() {
           window.history.replaceState({}, '', '/');
           setCurrentPage('home');
         } else {
-          setCurrentPage('admin_dashboard');
+          // Phân tích sub-page cho admin
+          if (path.includes('/admin/orders')) setCurrentPage('admin_orders');
+          else if (path.includes('/admin/products')) setCurrentPage('admin_products');
+          else if (path.includes('/admin/categories')) setCurrentPage('admin_categories');
+          else if (path.includes('/admin/customers')) setCurrentPage('admin_customers');
+          else setCurrentPage('admin_dashboard');
         }
       } else if (path.includes('/products')) {
         setCurrentPage('products');
@@ -153,7 +166,8 @@ function App() {
     // Cập nhật URL trình duyệt cho khớp với state
     let targetPath = '/';
     if (page.startsWith('admin_')) {
-      targetPath = '/admin';
+      const sub = page.replace('admin_', '');
+      targetPath = `/admin/${sub}`;
     } else if (page === 'login') {
       targetPath = '/login';
     } else if (page === 'register') {

@@ -35,7 +35,7 @@ const ProductTable = ({
                   <td>
                     <div>
                       <div className="prod-name" style={{ fontWeight: '500', color: 'var(--text-dark)', marginBottom: '4px' }}>{p.name}</div>
-                      <div className="prod-meta" style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{p.brand} · SKU: {p.sku}</div>
+                      <div className="prod-meta" style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{p.brand}</div>
                     </div>
                   </td>
                   <td style={{ width: '85px' }}>

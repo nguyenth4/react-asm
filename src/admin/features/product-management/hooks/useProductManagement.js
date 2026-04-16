@@ -14,6 +14,11 @@ export const useProductManagement = () => {
   const [selectedIds, setSelectedIds] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
+  const [toast, setToast] = useState(null);
+
+  const showToast = (msg) => {
+    setToast(msg);
+  };
 
   const fetchProducts = async () => {
     try {
@@ -53,8 +58,7 @@ export const useProductManagement = () => {
     let result = [...products];
     if (searchTerm) {
       result = result.filter(p => 
-        (p.name?.toLowerCase().includes(searchTerm.toLowerCase())) || 
-        (p.sku?.toLowerCase().includes(searchTerm.toLowerCase()))
+        p.name?.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
     if (filters.category) result = result.filter(p => p.category_name === filters.category);
@@ -125,11 +129,11 @@ export const useProductManagement = () => {
       if (editingProduct?.id) {
         // Cập nhật
         await productService.updateProduct(editingProduct.id, payload);
-        alert('Cập nhật sản phẩm thành công!');
+        showToast('Cập nhật sản phẩm thành công!');
       } else {
         // Thêm mới
         await productService.createProduct(payload);
-        alert('Thêm sản phẩm thành công!');
+        showToast('Thêm sản phẩm thành công!');
       }
       
       await fetchProducts();
@@ -168,6 +172,8 @@ export const useProductManagement = () => {
     openModal,
     closeModal,
     saveProduct,
-    deleteSelected
+    deleteSelected,
+    toast,
+    setToast
   };
 };

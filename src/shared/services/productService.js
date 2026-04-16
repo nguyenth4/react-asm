@@ -53,6 +53,7 @@ const productService = {
   createProduct: async (productData) => {
     try {
       const response = await axiosInstance.post('/products/add', productData);
+      listCache.clear(); // Clear cache to force refresh
       return response.data;
     } catch (error) {
       console.error('Error creating product:', error);
@@ -63,6 +64,8 @@ const productService = {
   updateProduct: async (id, productData) => {
     try {
       const response = await axiosInstance.put(`/products/${id}`, productData);
+      productCache.delete(id); // Clear specific product cache
+      listCache.clear();      // Clear list cache
       return response.data;
     } catch (error) {
       console.error(`Error updating product with id ${id}:`, error);
@@ -73,6 +76,8 @@ const productService = {
   deleteProduct: async (id) => {
     try {
       const response = await axiosInstance.delete(`/products/${id}`);
+      productCache.delete(id);
+      listCache.clear();
       return response.data;
     } catch (error) {
       console.error(`Error deleting product with id ${id}:`, error);

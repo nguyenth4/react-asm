@@ -27,7 +27,6 @@ const ProductModal = ({ isOpen, onClose, onSave, editingProduct, categories = []
     const formData = new FormData(e.target);
     const productData = {
       name: formData.get('name'),
-      sku: formData.get('sku'),
       brand: formData.get('brand'),
       category_id: Number(formData.get('category_id')),
       image: imagePreview,
@@ -76,15 +75,9 @@ const ProductModal = ({ isOpen, onClose, onSave, editingProduct, categories = []
               )}
             </div>
 
-            <div className="m-row">
-              <div className="m-group">
-                <label className="m-label">Tên sản phẩm *</label>
-                <input className="m-input" name="name" defaultValue={editingProduct?.name} placeholder="Nhập tên sản phẩm..." required />
-              </div>
-              <div className="m-group">
-                <label className="m-label">Mã SKU *</label>
-                <input className="m-input" name="sku" defaultValue={editingProduct?.sku} placeholder="Ví dụ: LIPS-001" required />
-              </div>
+            <div className="m-group">
+              <label className="m-label">Tên sản phẩm *</label>
+              <input className="m-input" name="name" defaultValue={editingProduct?.name} placeholder="Nhập tên sản phẩm..." required />
             </div>
 
             <div className="m-row">

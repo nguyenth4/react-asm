@@ -21,7 +21,7 @@ export const useOrderManagement = () => {
         createdAt: o.created_at,
         total: o.total_price,
         // Chuyển danh sách món hàng thành dạng chuỗi để UI hiển thị dễ dàng hơn
-        items: o.OrderItems ? o.OrderItems.map(item => `${item.Product?.name || 'Sản phẩm'} ×${item.quantity}`) : []
+        items: (o.OrderItems || []).map(item => `${item.Product?.name || 'Sản phẩm'} ×${item.quantity}`)
       }));
 
       setOrders(mappedData);

@@ -4,6 +4,7 @@ import ProductStats from './components/ProductStats';
 import ProductFilters from './components/ProductFilters';
 import ProductTable from './components/ProductTable';
 import ProductModal from './components/ProductModal';
+import Toast from '../../../shared/components/common/Toast';
 import { useProductManagement } from './hooks/useProductManagement';
 
 const ProductManagementPage = ({ onNavigate }) => {
@@ -26,7 +27,9 @@ const ProductManagementPage = ({ onNavigate }) => {
     openModal,
     closeModal,
     saveProduct,
-    deleteSelected
+    deleteSelected,
+    toast,
+    setToast
   } = useProductManagement();
 
   return (
@@ -36,6 +39,7 @@ const ProductManagementPage = ({ onNavigate }) => {
       title="Quản lý sản phẩm" 
       subTitle={`Có tổng cộng ${products.length} sản phẩm`}
     >
+      {toast && <Toast message={toast} onClose={() => setToast(null)} />}
       <ProductStats 
         products={products} 
         boxFilter={boxFilter}

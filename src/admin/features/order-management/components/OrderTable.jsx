@@ -45,7 +45,7 @@ const OrderTable = ({ orders, onSelectOrder, getStatusLabel, getStatusClass }) =
                     </div>
                   </div>
                 </td>
-                <td style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{o.items.join(', ')}</td>
+                <td style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{(o.items || []).join(', ')}</td>
                 <td className="order-total">{formatPrice(o.total)}</td>
                 <td className="pay-method">{o.payment}</td>
                 <td className="order-date">{formatDateTime(o.createdAt)}</td>
