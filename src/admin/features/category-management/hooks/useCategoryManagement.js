@@ -42,12 +42,19 @@ export const useCategoryManagement = () => {
   };
 
   const deleteCategory = async (id) => {
+    const category = categories.find(c => c.id === id);
+    if (category && category.count > 0) {
+      alert('Không thể xóa danh mục đã có sản phẩm!');
+      return;
+    }
+
     if (window.confirm('Bạn có chắc chắn muốn xóa danh mục này?')) {
       try {
         await categoryService.deleteCategory(id);
         fetchCategories();
       } catch (error) {
-        alert('Lỗi khi xóa: ' + (error.response?.data?.error || error.message));
+        const errorMsg = error.response?.data?.message || error.response?.data?.error || error.message;
+        alert('Lỗi khi xóa: ' + errorMsg);
       }
     }
   };
@@ -81,7 +88,8 @@ export const useCategoryManagement = () => {
       fetchCategories();
       closeModal();
     } catch (error) {
-      alert('Lỗi: ' + (error.response?.data?.error || error.message));
+      const errorMsg = error.response?.data?.message || error.response?.data?.error || error.message;
+      alert('Lỗi: ' + errorMsg);
     }
   };
 

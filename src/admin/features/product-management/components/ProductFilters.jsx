@@ -48,7 +48,6 @@ const ProductFilters = ({ searchTerm, onSearchChange, filters, onFilterChange, o
           <option value="stock_asc">Tồn kho ít</option>
         </select>
       </div>
-      
       <button className="btn-add" onClick={onAddClick}>
         <span>+</span> Thêm sản phẩm
       </button>
