@@ -19,8 +19,8 @@ const ProductFilter = ({ categories, selectedCategory, onCategoryChange }) => {
               <input 
                 type="radio" 
                 name="category"
-                checked={selectedCategory === cat.slug}
-                onChange={() => onCategoryChange(cat.slug)}
+                checked={selectedCategory === cat.id}
+                onChange={() => onCategoryChange(cat.id)}
               /> {cat.name}
             </label>
           ))}

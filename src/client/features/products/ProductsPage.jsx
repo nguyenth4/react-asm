@@ -51,8 +51,8 @@ const ProductsPage = ({ initialProducts, onProductsUpdate, onProductClick, onAdd
     fetchProducts();
   }, [selectedCategory]);
 
-  const handleCategoryChange = (slug) => {
-    setSelectedCategory(slug);
+  const handleCategoryChange = (id) => {
+    setSelectedCategory(id);
   };
 
   if (loading) return <div className="products-loading">Đang tải sản phẩm...</div>;

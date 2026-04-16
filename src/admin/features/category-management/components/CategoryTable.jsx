@@ -14,7 +14,6 @@ const CategoryTable = ({ categories, onEdit, onDelete, onToggleStatus }) => {
           <thead>
             <tr>
               <th style={{ textTransform: 'uppercase', fontSize: '13px', padding: '16px 20px', color: '#888' }}>TÊN DANH MỤC</th>
-              <th style={{ textTransform: 'uppercase', fontSize: '13px', padding: '16px 20px', color: '#888' }}>SLUG</th>
               <th style={{ textTransform: 'uppercase', fontSize: '13px', padding: '16px 20px', color: '#888' }}>DANH MỤC CHA</th>
               <th style={{ textTransform: 'uppercase', fontSize: '13px', padding: '16px 20px', color: '#888' }}>SỐ SP</th>
               <th style={{ textTransform: 'uppercase', fontSize: '13px', padding: '16px 20px', color: '#888' }}>THAO TÁC</th>
@@ -23,7 +22,7 @@ const CategoryTable = ({ categories, onEdit, onDelete, onToggleStatus }) => {
           <tbody>
             {categories.length === 0 ? (
               <tr>
-                <td colSpan={5} style={{ textAlign: 'center', padding: '40px', color: 'var(--text-muted)' }}>
+                <td colSpan={4} style={{ textAlign: 'center', padding: '40px', color: 'var(--text-muted)' }}>
                   Chưa có danh mục nào
                 </td>
               </tr>
@@ -31,15 +30,6 @@ const CategoryTable = ({ categories, onEdit, onDelete, onToggleStatus }) => {
               categories.map(c => (
                 <tr key={c.id}>
                   <td style={{ fontWeight: 500, color: '#333', padding: '16px 20px' }}>{c.name}</td>
-                  <td style={{ padding: '16px 20px' }}>
-                    <span style={{ 
-                      fontFamily: 'monospace', 
-                      color: 'var(--pink-500, #e91e63)', 
-                      fontSize: '13px' 
-                    }}>
-                      {c.slug}
-                    </span>
-                  </td>
                   <td style={{ padding: '16px 20px' }}>
                     <span style={{ 
                       display: 'inline-block',

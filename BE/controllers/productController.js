@@ -9,9 +9,15 @@ class ProductController {
             let whereClause = {};
 
             if (category) {
-                const cat = await CategoryModel.findOne({ where: { slug: category } });
-                if (cat) {
-                    whereClause.category_id = cat.id;
+                // Nếu category là số, lọc trực tiếp theo category_id
+                if (!isNaN(category)) {
+                    whereClause.category_id = Number(category);
+                } else {
+                    // Nếu vẫn truyền slug (từ các bản ghi cũ hoặc cache), thử tìm theo slug
+                    const cat = await CategoryModel.findOne({ where: { slug: category } });
+                    if (cat) {
+                        whereClause.category_id = cat.id;
+                    }
                 }
             }
 

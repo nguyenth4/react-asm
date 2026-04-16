@@ -5,7 +5,6 @@ import * as yup from 'yup';
 
 const categorySchema = yup.object().shape({
   name: yup.string().required('Vui lòng nhập tên danh mục'),
-  slug: yup.string(),
 });
 
 const CategoryModal = ({ isOpen, onClose, onSave, editingCategory }) => {
@@ -17,7 +16,6 @@ const CategoryModal = ({ isOpen, onClose, onSave, editingCategory }) => {
     if (isOpen) {
       reset({
         name: editingCategory?.name || '',
-        slug: editingCategory?.slug || ''
       });
     }
   }, [isOpen, editingCategory, reset]);
@@ -49,16 +47,6 @@ const CategoryModal = ({ isOpen, onClose, onSave, editingCategory }) => {
                 {...register('name')}
               />
               {errors.name && <span className="field-error">{errors.name.message}</span>}
-            </div>
-            <div className="m-group" style={{ marginBottom: '20px' }}>
-              <label className="m-label">Đường dẫn (Slug)</label>
-              <input 
-                className={`m-input ${errors.slug ? 'input-error' : ''}`} 
-                name="slug" 
-                placeholder="nuoc-hoa" 
-                {...register('slug')}
-              />
-              {errors.slug && <span className="field-error">{errors.slug.message}</span>}
             </div>
           </div>
           <div className="mfoot">

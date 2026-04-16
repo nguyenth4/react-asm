@@ -11,16 +11,6 @@ const categoryService = {
     }
   },
 
-  getCategoryBySlug: async (slug) => {
-    try {
-      const response = await axiosInstance.get(`/categories/slug/${slug}`);
-      return response.data.data;
-    } catch (error) {
-      console.error(`Error fetching category with slug ${slug}:`, error);
-      throw error;
-    }
-  },
-
   createCategory: async (categoryData) => {
     try {
       const response = await axiosInstance.post('/categories/add', categoryData);

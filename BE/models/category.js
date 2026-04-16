@@ -11,11 +11,6 @@ const Category = connection.define('Category', {
         type: DataTypes.STRING,
         allowNull: false
     },
-    slug: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true
-    },
     parent_id: {
         type: DataTypes.INTEGER,
         allowNull: true
@@ -36,7 +31,7 @@ const Category = connection.define('Category', {
     tableName: 'categories',
     timestamps: true,
     createdAt: 'created_at',
-    updatedAt: false
+    updatedAt: 'updated_at'
 });
 
 module.exports = Category;

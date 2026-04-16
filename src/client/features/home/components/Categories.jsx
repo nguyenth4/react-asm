@@ -43,8 +43,8 @@ const Categories = ({ onCategorySelect, selectedCategory, onSeeAllClick }) => {
         {categories.map((cat, index) => (
           <div 
             key={cat.id} 
-            className={`cat-card ${getTheme(index)} ${selectedCategory === cat.slug ? 'is-selected' : ''}`} 
-            onClick={() => onCategorySelect(cat.slug)}
+            className={`cat-card ${getTheme(index)} ${selectedCategory === cat.id ? 'is-selected' : ''}`} 
+            onClick={() => onCategorySelect(cat.id)}
           >
             <span className="cat-card__icon">{getIcon(cat.name)}</span>
             <div className="cat-card__name">{cat.name}</div>
