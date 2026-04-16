@@ -6,11 +6,11 @@ import './styles/products.css';
 import productService from '../../../shared/services/productService';
 import categoryService from '../../../shared/services/categoryService';
 
-const ProductsPage = ({ onProductClick, onAddToCart }) => {
-  const [products, setProducts] = useState([]);
+const ProductsPage = ({ initialProducts, onProductsUpdate, onProductClick, onAddToCart }) => {
+  const [products, setProducts] = useState(initialProducts || []);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(products.length === 0);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -28,10 +28,18 @@ const ProductsPage = ({ onProductClick, onAddToCart }) => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        setLoading(true);
+        // Chỉ hiện loading nếu danh sách rỗng
+        if (products.length === 0) setLoading(true);
+        
         const params = selectedCategory !== 'all' ? { category: selectedCategory } : {};
         const data = await productService.getAllProducts(params);
+        
         setProducts(data);
+        // Đồng bộ ngược lại App.js
+        if (selectedCategory === 'all' && onProductsUpdate) {
+          onProductsUpdate(data);
+        }
+        
         setLoading(false);
       } catch (err) {
         console.error('Failed to fetch products:', err);

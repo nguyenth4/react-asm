@@ -7,18 +7,26 @@ import Newsletter from './components/Newsletter';
 import productService from '../../../shared/services/productService';
 import './styles/home.css';
 
-const HomePage = ({ onShopClick, onProductClick, onAddToCart }) => {
-  const [products, setProducts] = useState([]);
+const HomePage = ({ initialProducts, onProductsUpdate, onShopClick, onProductClick, onAddToCart }) => {
+  const [products, setProducts] = useState(initialProducts || []);
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(products.length === 0);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        setLoading(true);
+        // Chỉ hiện loading nếu chưa có dữ liệu gì
+        if (products.length === 0) setLoading(true);
+        
         const params = selectedCategory !== 'all' ? { category: selectedCategory } : {};
         const data = await productService.getAllProducts(params);
+        
         setProducts(data);
+        // Đồng bộ ngược lại App.js nếu đang ở chế độ "all"
+        if (selectedCategory === 'all' && onProductsUpdate) {
+          onProductsUpdate(data);
+        }
+        
         setLoading(false);
       } catch (error) {
         console.error('Failed to fetch products for home page:', error);

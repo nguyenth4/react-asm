@@ -96,6 +96,8 @@ function App() {
   }, [user]);
   
   const [selectedProductId, setSelectedProductId] = useState(null);
+  const [selectedProductData, setSelectedProductData] = useState(null);
+  const [globalProducts, setGlobalProducts] = useState([]);
   const [cartItems, setCartItems] = useState([]);
 
   // ── Cart logic ──────────────────────────────────────────
@@ -133,7 +135,7 @@ function App() {
   };
 
   // ── Navigation logic ──────────────────────────────────────────
-  const navigateTo = (page, productId = null) => {
+  const navigateTo = (page, productId = null, productData = null) => {
     if (page.startsWith('admin_')) {
       if (!user) {
         setCurrentPage('login');
@@ -167,6 +169,8 @@ function App() {
         return;
       }
       targetPath = '/checkout';
+    } else if (page === 'detail' && productId) {
+      targetPath = `/products-detail`; // Đường dẫn ảo để khớp logic detail
     }
 
     window.history.pushState({}, '', targetPath);
@@ -174,6 +178,12 @@ function App() {
     setCurrentPage(page);
     if (productId !== null) {
       setSelectedProductId(productId);
+    }
+    // Lưu trữ dữ liệu sơ bộ nếu có
+    if (productData !== null) {
+      setSelectedProductData(productData);
+    } else {
+      setSelectedProductData(null);
     }
   };
 
@@ -201,6 +211,9 @@ function App() {
           updateQty={updateQty}
           removeFromCart={removeFromCart}
           selectedProductId={selectedProductId}
+          selectedProductData={selectedProductData}
+          products={globalProducts}
+          onProductsUpdate={setGlobalProducts}
           user={user}
           onLogout={handleLogout}
           onLoginSuccess={handleLoginSuccess}

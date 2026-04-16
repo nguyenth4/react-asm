@@ -17,6 +17,9 @@ const ClientApp = ({
   updateQty, 
   removeFromCart,
   selectedProductId,
+  selectedProductData,
+  products,
+  onProductsUpdate,
   user,
   onLogout,
   onLoginSuccess,
@@ -29,15 +32,19 @@ const ClientApp = ({
       case 'home':
         return (
           <HomePage
+            initialProducts={products}
+            onProductsUpdate={onProductsUpdate}
             onShopClick={() => onNavigate('products')}
-            onProductClick={(id) => onNavigate('detail', id)}
+            onProductClick={(id, data) => onNavigate('detail', id, data)}
             onAddToCart={addToCart}
           />
         );
       case 'products':
         return (
           <ProductsPage
-            onProductClick={(id) => onNavigate('detail', id)}
+            initialProducts={products}
+            onProductsUpdate={onProductsUpdate}
+            onProductClick={(id, data) => onNavigate('detail', id, data)}
             onAddToCart={addToCart}
           />
         );
@@ -45,6 +52,7 @@ const ClientApp = ({
         return (
           <ProductDetailPage
             productId={selectedProductId}
+            initialData={selectedProductData}
             onBack={() => onNavigate('products')}
             onAddToCart={addToCart}
           />

@@ -8,7 +8,7 @@ const ProductList = ({ products, onProductClick, onAddToCart }) => {
         <ProductCard
           key={product.id}
           product={product}
-          onClick={() => onProductClick(product.id)}
+          onClick={() => onProductClick(product.id, product)}
           onAddToCart={onAddToCart}
         />
       ))}

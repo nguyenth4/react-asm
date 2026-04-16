@@ -3,9 +3,21 @@ import { formatCurrency } from '../../../shared/utils/format';
 import productService from '../../../shared/services/productService';
 import './styles/product-detail.css';
 
-const ProductDetailPage = ({ productId, onBack, onAddToCart }) => {
-  const [product, setProduct] = useState(null);
-  const [loading, setLoading] = useState(true);
+const ProductDetailPage = ({ productId, initialData, onBack, onAddToCart }) => {
+  // Mapping function to ensure data format consistency
+  const mapProductData = (data) => ({
+    ...data,
+    category: data.Category?.name || data.category || 'Uncategorized',
+    images: data.image ? [data.image] : (data.images || ['https://via.placeholder.com/800']),
+    rating: data.rating || 5.0,
+    reviews: data.review_count || data.reviews || 0,
+    ingredients: data.ingredients || 'Thông tin thành phần đang được cập nhật...'
+  });
+
+  const [product, setProduct] = useState(() => {
+    return initialData ? mapProductData(initialData) : null;
+  });
+  const [loading, setLoading] = useState(!initialData);
   const [error, setError] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState('description');
@@ -26,29 +38,28 @@ const ProductDetailPage = ({ productId, onBack, onAddToCart }) => {
       }
 
       try {
-        setLoading(true);
-        const data = await productService.getProductById(productId);
+        // Nếu chưa có dữ liệu ban đầu, hiện loading
+        if (!product) setLoading(true);
         
-        // Map backend data to frontend format
-        const mappedProduct = {
-          ...data,
-          category: data.Category?.name || 'Uncategorized',
-          images: data.image ? [data.image] : ['https://via.placeholder.com/800'], // Fallback image if none
-          rating: 5.0, // Default rating as BE doesn't have it yet
-          reviews: data.review_count || 0,
-          ingredients: 'Thông tin thành phần đang được cập nhật...' // Default as BE doesn't have it yet
-        };
+        // Vẫn gọi API để đồng bộ dữ liệu mới nhất từ DB
+        const data = await productService.getProductById(productId, true);
+        const mappedProduct = mapProductData(data);
         
         setProduct(mappedProduct);
         setLoading(false);
       } catch (err) {
         console.error('Failed to fetch product detail:', err);
-        setError('Không thể tải thông tin sản phẩm. Vui lòng thử lại sau.');
+        // Nếu đã có product (từ initialData), không hiện lỗi nặng
+        if (!product) {
+          setError('Không thể tải thông tin sản phẩm. Vui lòng thử lại sau.');
+        }
         setLoading(false);
       }
     };
 
     fetchProduct();
+    // Scroll to top when productId changes
+    window.scrollTo(0, 0);
   }, [productId]);
 
   const handleDecrease = () => {
