@@ -8,17 +8,9 @@ if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir, { recursive: true });
 }
 
-// Cấu hình storage cho multer
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, uploadDir);
-    },
-    filename: function (req, file, cb) {
-        // Tạo tên file an toàn: timestamp + đuôi mở rộng gốc
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, uniqueSuffix + path.extname(file.originalname));
-    }
-});
+// Sử dụng memory storage để upload file vào bộ nhớ
+// Sau đó image processing bằng sharp sẽ xử lý ảnh từ bộ nhớ trước khi ghi ra disk
+const storage = multer.memoryStorage();
 
 // Kiểm tra định dạng file
 const fileFilter = (req, file, cb) => {
@@ -35,7 +27,7 @@ const fileFilter = (req, file, cb) => {
 
 const upload = multer({ 
     storage: storage,
-    limits: { fileSize: 5 * 1024 * 1024 }, // Giới hạn 5MB
+    limits: { fileSize: 10 * 1024 * 1024 }, // Tăng giới hạn lên 10MB để nhận ảnh gốc to, sau đó sharp nén lại
     fileFilter: fileFilter
 });
 
