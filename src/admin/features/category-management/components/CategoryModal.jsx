@@ -30,7 +30,7 @@ const CategoryModal = ({ isOpen, onClose, onSave, editingCategory }) => {
   };
 
   return (
-    <div className="modal-overlay show" onClick={onClose}>
+    <div className="modal-overlay show">
       <div className="modal" style={{ maxWidth: '500px' }} onClick={e => e.stopPropagation()}>
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <div className="mhead">

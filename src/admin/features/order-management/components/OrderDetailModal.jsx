@@ -12,7 +12,7 @@ const OrderDetailModal = ({ order, isOpen, onClose, onUpdateStatus, getStatusLab
   };
 
   return (
-    <div className={`modal-overlay show`} onClick={onClose}>
+    <div className={`modal-overlay show`}>
       <div className="modal" onClick={e => e.stopPropagation()}>
         <div className="mhead" style={{ borderBottom: '1px solid #edf2f7', paddingBottom: '16px' }}>
           <div>

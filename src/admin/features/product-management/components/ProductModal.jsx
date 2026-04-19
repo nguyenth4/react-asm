@@ -61,7 +61,7 @@ const ProductModal = ({ isOpen, onClose, onSave, editingProduct, categories = []
   };
 
   return (
-    <div className="modal-overlay show" onClick={onClose}>
+    <div className="modal-overlay show">
       <div className="modal" onClick={e => e.stopPropagation()}>
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <div className="mhead">
