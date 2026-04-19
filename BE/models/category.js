@@ -9,7 +9,8 @@ const Category = connection.define('Category', {
     },
     name: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: { msg: 'Tên danh mục này đã tồn tại' }
     },
     icon: {
         type: DataTypes.STRING,

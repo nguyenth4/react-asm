@@ -1,11 +1,18 @@
 const CategoryModel = require('../models/category');
 const ProductModel = require('../models/product');
+const sequelize = require('../database');
 
 class CategoryController {
 
     static async get(req, res) {
         try {
-            const categories = await CategoryModel.findAll();
+            const categories = await CategoryModel.findAll({
+                attributes: [
+                    'id', 'name', 'icon', 'description', 
+                    [sequelize.literal('(SELECT COUNT(*) FROM products WHERE products.category_id = Category.id)'), 'product_count'],
+                    'created_at'
+                ]
+            });
             res.status(200).json({
                 "status": 200,
                 "message": "Lấy danh sách thành công",
@@ -21,7 +28,13 @@ class CategoryController {
     static async getById(req, res) {
         try {
             const { id } = req.params;
-            const category = await CategoryModel.findByPk(id);
+            const category = await CategoryModel.findByPk(id, {
+                attributes: [
+                    'id', 'name', 'icon', 'description', 
+                    [sequelize.literal('(SELECT COUNT(*) FROM products WHERE products.category_id = Category.id)'), 'product_count'],
+                    'created_at'
+                ]
+            });
 
             if (!category) {
                 return res.status(404).json({ message: "Id không tồn tại" });
@@ -45,7 +58,7 @@ class CategoryController {
                 name, 
                 icon, 
                 description, 
-                product_count
+                product_count: 0 // Resetting to 0 as it will be calculated
             };
             const category = await CategoryModel.create(categoryData);
 
@@ -65,7 +78,9 @@ class CategoryController {
             const { id } = req.params;
             const { name, icon, description, product_count } = req.body;
 
-            const category = await CategoryModel.findByPk(id);
+            const category = await CategoryModel.findByPk(id, {
+                attributes: ['id', 'name', 'icon', 'description', 'product_count', 'created_at']
+            });
             if (!category) {
                 return res.status(404).json({ message: "Id không tồn tại" });
             }
@@ -94,7 +109,9 @@ class CategoryController {
         try {
             const { id } = req.params;
 
-            const category = await CategoryModel.findByPk(id);
+            const category = await CategoryModel.findByPk(id, {
+                attributes: ['id', 'name', 'icon', 'description', 'product_count', 'created_at']
+            });
             if (!category) {
                 return res.status(404).json({ message: "Id không tồn tại" });
             }

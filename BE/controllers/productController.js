@@ -26,7 +26,10 @@ class ProductController {
                     'stock', 'status', 'image', 'category_id', 
                     'description', 'badge', 'review_count', 'created_at', 'updated_at'
                 ],
-                include: [{ model: CategoryModel }]
+                include: [{ 
+                    model: CategoryModel,
+                    attributes: ['id', 'name', 'icon', 'description', 'product_count', 'created_at']
+                }]
             });
 
             res.status(200).json({
@@ -43,7 +46,10 @@ class ProductController {
     static async getById(req, res) {
         try {
             const product = await ProductModel.findByPk(req.params.id, {
-                include: [{ model: CategoryModel }]
+                include: [{ 
+                    model: CategoryModel,
+                    attributes: ['id', 'name', 'icon', 'description', 'product_count', 'created_at']
+                }]
             });
             if (!product) return res.status(404).json({ message: 'Không tìm thấy sản phẩm' });
             res.status(200).json({ status: 200, data: product });
