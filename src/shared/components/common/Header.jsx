@@ -61,6 +61,17 @@ const Header = ({ activePage, onNavigate, cartCount = 0, user, onLogout }) => {
             <span className="user-name" style={{ fontSize: '14px', fontWeight: '500', color: 'var(--text-main)', cursor: 'default' }}>
               Chào, {user.first_name}
             </span>
+            {user.role !== 'admin' && (
+              <button
+                className="navbar__icon-btn"
+                title="Đơn hàng của tôi"
+                aria-label="Đơn hàng của tôi"
+                onClick={() => onNavigate('orders')}
+                style={{ color: activePage === 'orders' ? 'var(--pink-400)' : undefined }}
+              >
+                <i className="bi bi-clock-history"></i>
+              </button>
+            )}
             <button className="navbar__icon-btn" title="Đăng xuất" onClick={onLogout}>
               <i className="bi bi-box-arrow-right"></i>
             </button>

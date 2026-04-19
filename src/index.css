@@ -292,16 +292,16 @@ textarea {
 
 /* ── FOOTER ── */
 .footer {
-  background: #3D1F2D;
+  background: #2D1822;
   color: #fff;
-  padding: 56px 52px 32px;
+  padding: 80px 52px 40px;
 }
 
 .footer__main {
   display: grid;
   grid-template-columns: 2fr 1fr 1fr 1fr;
-  gap: 48px;
-  margin-bottom: 40px;
+  gap: 64px;
+  margin-bottom: 60px;
 }
 
 .footer__logo {
@@ -374,13 +374,13 @@ textarea {
 }
 
 .footer__bottom {
-  border-top: 1px solid rgba(255, 255, 255, .08);
-  padding-top: 24px;
+  border-top: 1px solid rgba(255, 255, 255, .1);
+  padding-top: 32px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 24px;
 }
 
 .footer__copy,

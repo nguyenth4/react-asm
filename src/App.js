@@ -65,6 +65,7 @@ function App() {
     if (path.includes('/products')) return 'products';
     if (path.includes('/cart')) return 'cart';
     if (path.includes('/checkout')) return 'checkout';
+    if (path.includes('/orders')) return 'orders';
     if (path.includes('/login')) return 'login';
     if (path.includes('/register')) return 'register';
     return 'home';
@@ -95,6 +96,8 @@ function App() {
         setCurrentPage('cart');
       } else if (path.includes('/checkout')) {
         setCurrentPage('checkout');
+      } else if (path.includes('/orders')) {
+        setCurrentPage('orders');
       } else if (path.includes('/login')) {
         setCurrentPage('login');
       } else if (path.includes('/register')) {
@@ -211,6 +214,13 @@ function App() {
         return;
       }
       targetPath = '/checkout';
+    } else if (page === 'orders') {
+      if (!user) {
+        alert('Vui lòng đăng nhập để xem lịch sử đơn hàng!');
+        navigateTo('login');
+        return;
+      }
+      targetPath = '/orders';
     } else if (page === 'detail' && productId) {
       targetPath = `/products-detail`; // Đường dẫn ảo để khớp logic detail
     }
