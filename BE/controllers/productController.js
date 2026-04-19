@@ -30,6 +30,11 @@ class ProductController {
 
             const products = await ProductModel.findAll({
                 where: whereClause,
+                attributes: [
+                    'id', 'name', 'brand', 'slug', 'price', 'price_sale', 
+                    'stock', 'status', 'image', 'category_id', 
+                    'description', 'badge', 'review_count', 'created_at', 'updated_at'
+                ],
                 include: [{ model: CategoryModel }]
             });
 

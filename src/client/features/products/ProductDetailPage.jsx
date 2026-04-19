@@ -4,15 +4,8 @@ import productService from '../../../shared/services/productService';
 import './styles/product-detail.css';
 
 const ProductDetailPage = ({ productId, initialData, onBack, onAddToCart }) => {
-  // Mapping function to ensure data format consistency
-  const mapProductData = (data) => ({
-    ...data,
-    category: data.Category?.name || data.category || 'Uncategorized',
-    images: data.image ? [data.image] : (data.images || ['https://via.placeholder.com/800']),
-    rating: data.rating || 5.0,
-    reviews: data.review_count || data.reviews || 0,
-    ingredients: data.ingredients || 'Thông tin thành phần đang được cập nhật...'
-  });
+  // Rely on the central mapper in productService
+  const mapProductData = (data) => data;
 
   const [product, setProduct] = useState(() => {
     return initialData ? mapProductData(initialData) : null;
@@ -60,6 +53,7 @@ const ProductDetailPage = ({ productId, initialData, onBack, onAddToCart }) => {
     fetchProduct();
     // Scroll to top when productId changes
     window.scrollTo(0, 0);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [productId]);
 
   const handleDecrease = () => {

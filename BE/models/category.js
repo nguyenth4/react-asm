@@ -11,10 +11,6 @@ const Category = connection.define('Category', {
         type: DataTypes.STRING,
         allowNull: false
     },
-    parent_id: {
-        type: DataTypes.INTEGER,
-        allowNull: true
-    },
     icon: {
         type: DataTypes.STRING,
         allowNull: true
@@ -26,12 +22,17 @@ const Category = connection.define('Category', {
     product_count: {
         type: DataTypes.INTEGER,
         defaultValue: 0
+    },
+    slug: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true
     }
 }, {
     tableName: 'categories',
     timestamps: true,
     createdAt: 'created_at',
-    updatedAt: 'updated_at'
+    updatedAt: false
 });
 
 module.exports = Category;
