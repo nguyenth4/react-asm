@@ -67,6 +67,9 @@ class ProductController {
     static async create(req, res) {
         try {
             const productData = { ...req.body };
+            if (req.file) {
+                productData.image = `http://localhost:3000/uploads/${req.file.filename}`;
+            }
             const product = await ProductModel.create(productData);
             res.status(201).json({ status: 201, message: 'Thêm sản phẩm thành công', data: product });
         } catch (error) {
@@ -85,6 +88,9 @@ class ProductController {
             if (!product) return res.status(404).json({ message: 'Không tìm thấy sản phẩm' });
             
             const updateData = { ...req.body };
+            if (req.file) {
+                updateData.image = `http://localhost:3000/uploads/${req.file.filename}`;
+            }
             
             await product.update(updateData);
             res.status(200).json({ status: 200, message: 'Cập nhật thành công', data: product });

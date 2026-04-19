@@ -19,6 +19,7 @@ const productSchema = yup.object().shape({
 
 const ProductModal = ({ isOpen, onClose, onSave, editingProduct, categories = [] }) => {
   const [imagePreview, setImagePreview] = useState('');
+  const [imageFile, setImageFile] = useState(null); // Lưu trữ file tải lên thực tế
 
   const { register, handleSubmit, reset, formState: { errors } } = useForm({
     resolver: yupResolver(productSchema)
@@ -27,6 +28,7 @@ const ProductModal = ({ isOpen, onClose, onSave, editingProduct, categories = []
   useEffect(() => {
     if (isOpen) {
       setImagePreview(editingProduct?.image || '');
+      setImageFile(null);
       reset({
         name: editingProduct?.name || '',
         brand: editingProduct?.brand || '',
@@ -44,11 +46,8 @@ const ProductModal = ({ isOpen, onClose, onSave, editingProduct, categories = []
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-      };
-      reader.readAsDataURL(file);
+      setImageFile(file);
+      setImagePreview(URL.createObjectURL(file));
     }
   };
 
@@ -56,7 +55,7 @@ const ProductModal = ({ isOpen, onClose, onSave, editingProduct, categories = []
     onSave({
       ...data,
       category_id: Number(data.category_id),
-      image: imagePreview
+      image: imageFile || imagePreview // Trả về File object thay vì Base64
     });
   };
 

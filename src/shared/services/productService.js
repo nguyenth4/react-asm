@@ -85,7 +85,21 @@ const productService = {
 
   createProduct: async (productData) => {
     try {
-      const response = await axiosInstance.post('/products/add', productData);
+      let payload = productData;
+      let headers = {};
+      
+      // Nếu có chứa File object (ảnh mới), sẽ tự chuyển thành FormData
+      if (productData.image instanceof File) {
+        payload = new FormData();
+        Object.keys(productData).forEach(key => {
+          if (productData[key] !== null && productData[key] !== undefined) {
+             payload.append(key, productData[key]);
+          }
+        });
+        headers['Content-Type'] = 'multipart/form-data';
+      }
+
+      const response = await axiosInstance.post('/products/add', payload, { headers });
       listCache.clear(); // Clear cache to force refresh
       return response.data;
     } catch (error) {
@@ -96,7 +110,21 @@ const productService = {
 
   updateProduct: async (id, productData) => {
     try {
-      const response = await axiosInstance.put(`/products/${id}`, productData);
+      let payload = productData;
+      let headers = {};
+      
+      // Nếu có chứa File object (ảnh mới), sẽ tự chuyển thành FormData
+      if (productData.image instanceof File) {
+        payload = new FormData();
+        Object.keys(productData).forEach(key => {
+          if (productData[key] !== null && productData[key] !== undefined) {
+             payload.append(key, productData[key]);
+          }
+        });
+        headers['Content-Type'] = 'multipart/form-data';
+      }
+
+      const response = await axiosInstance.put(`/products/${id}`, payload, { headers });
       productCache.delete(id); // Clear specific product cache
       listCache.clear();      // Clear list cache
       return response.data;

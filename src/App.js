@@ -126,7 +126,12 @@ function App() {
 
   // Persist cart to localStorage whenever it changes
   useEffect(() => {
-    localStorage.setItem('bb_cart', JSON.stringify(cartItems));
+    try {
+      localStorage.setItem('bb_cart', JSON.stringify(cartItems));
+    } catch (error) {
+      console.error('Lỗi khi lưu giỏ hàng vào bộ nhớ (Quota Exceeded):', error);
+      alert('Không thể lưu thêm vào giỏ hàng do dung lượng dữ liệu quá lớn. Vui lòng thanh toán bớt hoặc xóa bớt sản phẩm.');
+    }
   }, [cartItems]);
 
   // ── Cart logic ──────────────────────────────────────────
@@ -162,7 +167,21 @@ function App() {
            alert(`Lỗi: Không thể vượt quá số lượng tồn kho (Còn ${product.stock} sản phẩm)`);
            return prev;
         }
-        return [...prev, { ...product, qty: qty, price: effectivePrice, original_price: product.price }];
+
+        // Tối ưu dung lượng: Chỉ lấy các thuộc tính cần thiết thay vì sao chép toàn bộ object
+        const cartItemMin = {
+          id: product.id,
+          name: product.name,
+          category: product.category || (product.Category && product.Category.name),
+          image: product.image,
+          price: effectivePrice,
+          oldPrice: hasSale ? product.price : null,
+          original_price: product.price,
+          qty: qty,
+          stock: product.stock
+        };
+
+        return [...prev, cartItemMin];
       }
     });
   };
