@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, useController } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
 const productSchema = yup.object().shape({
   name: yup.string().required('Vui lòng nhập tên sản phẩm'),
-  brand: yup.string(),
   category_id: yup.string().required('Vui lòng chọn danh mục'),
   price: yup.number().typeError('Giá gốc phải là số').required('Vui lòng nhập giá').min(0, 'Giá không thể âm'),
   price_sale: yup.number().nullable().transform((value, originalValue) => originalValue === '' ? null : value).typeError('Giá khuyến mãi phải là số').min(0, 'Giá KM không thể âm')
@@ -14,16 +13,19 @@ const productSchema = yup.object().shape({
          return value <= this.parent.price;
      }),
   stock: yup.number().typeError('Số lượng phải là số').required('Vui lòng nhập số lượng').min(0, 'Số lượng không thể âm'),
-  isVisible: yup.boolean()
+  isVisible: yup.boolean().default(true)
 });
 
 const ProductModal = ({ isOpen, onClose, onSave, editingProduct, categories = [] }) => {
   const [imagePreview, setImagePreview] = useState('');
   const [imageFile, setImageFile] = useState(null); // Lưu trữ file tải lên thực tế
 
-  const { register, handleSubmit, reset, formState: { errors } } = useForm({
-    resolver: yupResolver(productSchema)
+  const { register, handleSubmit, reset, control, formState: { errors } } = useForm({
+    resolver: yupResolver(productSchema),
+    defaultValues: { isVisible: true }
   });
+
+  const { field: isVisibleField } = useController({ name: 'isVisible', control });
 
   useEffect(() => {
     if (isOpen) {
@@ -31,7 +33,6 @@ const ProductModal = ({ isOpen, onClose, onSave, editingProduct, categories = []
       setImageFile(null);
       reset({
         name: editingProduct?.name || '',
-        brand: editingProduct?.brand || '',
         category_id: editingProduct?.category_id?.toString() || '',
         price: editingProduct?.price || 0,
         price_sale: editingProduct?.price_sale || null,
@@ -107,31 +108,19 @@ const ProductModal = ({ isOpen, onClose, onSave, editingProduct, categories = []
               {errors.name && <span className="field-error">{errors.name.message}</span>}
             </div>
 
-            <div className="m-row">
-              <div className="m-group">
-                <label className="m-label">Thương hiệu</label>
-                <input 
-                  className={`m-input ${errors.brand ? 'input-error' : ''}`} 
-                  name="brand" 
-                  placeholder="Ví dụ: MAC, Dior..." 
-                  {...register('brand')}
-                />
-                {errors.brand && <span className="field-error">{errors.brand.message}</span>}
-              </div>
-              <div className="m-group">
-                <label className="m-label">Danh mục *</label>
-                <select 
-                  className={`m-select ${errors.category_id ? 'input-error' : ''}`} 
-                  name="category_id" 
-                  {...register('category_id')}
-                >
-                  <option value="">-- Chọn danh mục --</option>
-                  {categories.map(c => (
-                    <option key={c.id} value={c.id}>{c.name}</option>
-                  ))}
-                </select>
-                {errors.category_id && <span className="field-error">{errors.category_id.message}</span>}
-              </div>
+            <div className="m-group">
+              <label className="m-label">Danh mục *</label>
+              <select 
+                className={`m-select ${errors.category_id ? 'input-error' : ''}`} 
+                name="category_id" 
+                {...register('category_id')}
+              >
+                <option value="">-- Chọn danh mục --</option>
+                {categories.map(c => (
+                  <option key={c.id} value={c.id}>{c.name}</option>
+                ))}
+              </select>
+              {errors.category_id && <span className="field-error">{errors.category_id.message}</span>}
             </div>
 
             <div className="m-row">
@@ -173,9 +162,9 @@ const ProductModal = ({ isOpen, onClose, onSave, editingProduct, categories = []
                 <label className="m-label" style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', marginTop: '12px' }}>
                   <input 
                     type="checkbox" 
-                    name="isVisible" 
+                    checked={!!isVisibleField.value}
+                    onChange={(e) => isVisibleField.onChange(e.target.checked)}
                     style={{ width: '18px', height: '18px', accentColor: 'var(--pink-500)' }} 
-                    {...register('isVisible')}
                   />
                   <span>Hiển thị trên cửa hàng</span>
                 </label>
