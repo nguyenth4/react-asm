@@ -7,8 +7,12 @@ const productSchema = yup.object().shape({
   name: yup.string().required('Vui lòng nhập tên sản phẩm'),
   brand: yup.string(),
   category_id: yup.string().required('Vui lòng chọn danh mục'),
-  price: yup.number().typeError('Giá bán phải là số').required('Vui lòng nhập giá').min(0, 'Giá không thể âm'),
-  originalPrice: yup.number().nullable().transform((value, originalValue) => originalValue === '' ? null : value).typeError('Giá gốc phải là số').min(0, 'Giá gốc không thể âm'),
+  price: yup.number().typeError('Giá gốc phải là số').required('Vui lòng nhập giá').min(0, 'Giá không thể âm'),
+  price_sale: yup.number().nullable().transform((value, originalValue) => originalValue === '' ? null : value).typeError('Giá khuyến mãi phải là số').min(0, 'Giá KM không thể âm')
+     .test('is-less-than-price', 'Giá khuyến mãi không được lớn hơn giá gốc', function(value) {
+         if (!value) return true;
+         return value <= this.parent.price;
+     }),
   stock: yup.number().typeError('Số lượng phải là số').required('Vui lòng nhập số lượng').min(0, 'Số lượng không thể âm'),
   isVisible: yup.boolean()
 });
@@ -28,7 +32,7 @@ const ProductModal = ({ isOpen, onClose, onSave, editingProduct, categories = []
         brand: editingProduct?.brand || '',
         category_id: editingProduct?.category_id?.toString() || '',
         price: editingProduct?.price || 0,
-        originalPrice: editingProduct?.originalPrice || null,
+        price_sale: editingProduct?.price_sale || null,
         stock: editingProduct?.stock || 0,
         isVisible: editingProduct ? editingProduct.isVisible : true
       });
@@ -133,7 +137,7 @@ const ProductModal = ({ isOpen, onClose, onSave, editingProduct, categories = []
 
             <div className="m-row">
               <div className="m-group">
-                <label className="m-label">Giá bán hiện tại (VND) *</label>
+                <label className="m-label">Giá gốc (VND) *</label>
                 <input 
                   className={`m-input ${errors.price ? 'input-error' : ''}`} 
                   type="number" 
@@ -143,15 +147,15 @@ const ProductModal = ({ isOpen, onClose, onSave, editingProduct, categories = []
                 {errors.price && <span className="field-error">{errors.price.message}</span>}
               </div>
               <div className="m-group">
-                <label className="m-label">Giá gốc (nếu có)</label>
+                <label className="m-label">Giá khuyến mãi (nếu có)</label>
                 <input 
-                  className={`m-input ${errors.originalPrice ? 'input-error' : ''}`} 
+                  className={`m-input ${errors.price_sale ? 'input-error' : ''}`} 
                   type="number" 
-                  name="originalPrice" 
-                  placeholder="Dùng để tính giảm giá" 
-                  {...register('originalPrice')}
+                  name="price_sale" 
+                  placeholder="Khuyến mãi phải nhỏ hơn giá gốc" 
+                  {...register('price_sale')}
                 />
-                {errors.originalPrice && <span className="field-error">{errors.originalPrice.message}</span>}
+                {errors.price_sale && <span className="field-error">{errors.price_sale.message}</span>}
               </div>
             </div>
 

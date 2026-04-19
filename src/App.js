@@ -122,12 +122,27 @@ function App() {
     }
     setCartItems((prev) => {
       const existing = prev.find((item) => item.id === product.id);
+      
+      // Calculate effective price once
+      const hasSale = product.price_sale && Number(product.price_sale) < Number(product.price);
+      const effectivePrice = hasSale ? product.price_sale : product.price;
+
       if (existing) {
+        const newQty = existing.qty + qty;
+        if (product.stock && newQty > product.stock) {
+           alert(`Lỗi: Không thể vượt quá số lượng tồn kho (Còn ${product.stock} sản phẩm)`);
+           return prev;
+        }
         return prev.map((item) =>
-          item.id === product.id ? { ...item, qty: item.qty + qty } : item
+          item.id === product.id ? { ...item, qty: newQty, price: effectivePrice, original_price: product.price } : item
         );
+      } else {
+        if (product.stock && qty > product.stock) {
+           alert(`Lỗi: Không thể vượt quá số lượng tồn kho (Còn ${product.stock} sản phẩm)`);
+           return prev;
+        }
+        return [...prev, { ...product, qty: qty, price: effectivePrice, original_price: product.price }];
       }
-      return [...prev, { ...product, qty: qty }];
     });
   };
 

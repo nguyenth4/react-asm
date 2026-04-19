@@ -48,7 +48,12 @@ const CheckoutPage = ({ onNavigate, cartItems = [], user, onClearCart }) => {
     }
   }, [user, reset]);
 
-  const totalPrice = cartItems.reduce((sum, item) => sum + (item.price * item.qty), 0);
+  // Calculate prices
+  const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.qty), 0);
+  const SHIPPING_FEE = 30000;
+  const FREE_SHIP_THRESHOLD = 500000;
+  const shippingFee = subtotal >= FREE_SHIP_THRESHOLD ? 0 : SHIPPING_FEE;
+  const totalPrice = subtotal + shippingFee;
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
@@ -208,11 +213,11 @@ const CheckoutPage = ({ onNavigate, cartItems = [], user, onClearCart }) => {
 
                 <div className="checkout-cart-summary-line" style={{ marginTop: '20px' }}>
                   <span>Tạm tính</span>
-                  <span>{formatPrice(totalPrice)}</span>
+                  <span>{formatPrice(subtotal)}</span>
                 </div>
                 <div className="checkout-cart-summary-line">
                   <span>Phí vận chuyển</span>
-                  <span>Miễn phí</span>
+                  <span>{shippingFee === 0 ? 'Miễn phí' : formatPrice(shippingFee)}</span>
                 </div>
                 
                 <div className="checkout-cart-summary-line grand-total">

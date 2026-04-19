@@ -28,7 +28,9 @@ const ProductTable = ({
           </thead>
           <tbody>
             {products.map(p => {
-              const discount = p.originalPrice ? Math.round((1 - p.price / p.originalPrice) * 100) : 0;
+              const displayPrice = p.price_sale ? p.price_sale : p.price;
+              const hasSale = p.price_sale && Number(p.price_sale) < Number(p.price);
+              const discount = hasSale ? Math.round((1 - p.price_sale / p.price) * 100) : 0;
               const stockClass = p.stock === 0 ? 'out' : p.stock <= 20 ? 'low' : 'ok';
               return (
                 <tr key={p.id}>
@@ -49,13 +51,13 @@ const ProductTable = ({
                       )}
                     </div>
                   </td>
-                  <td><span className="cat-tag">{p.category}</span></td>
+                  <td><span className="cat-tag">{p.category?.name || p.category}</span></td>
                   <td>
-                    <span className="price-val">{formatPrice(p.price)}</span>
+                    <span className="price-val">{formatPrice(displayPrice)}</span>
                     {discount > 0 && <span className="discount-tag">-{discount}%</span>}
                   </td>
                   <td><span className={`stock-val ${stockClass}`}>{p.stock}</span></td>
-                  <td className="sold-val">{p.soldCount.toLocaleString()}</td>
+                  <td className="sold-val">{(p.sold_count || 0).toLocaleString()}</td>
                   <td>
                     <span className="status-dot">
                       <span className={`sdot ${p.isVisible ? 'on' : 'off'}`}></span>
