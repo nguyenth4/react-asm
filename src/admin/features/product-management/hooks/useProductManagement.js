@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import productService from '../../../../shared/services/productService';
 import categoryService from '../../../../shared/services/categoryService';
-import { generateSlug } from '../../../../shared/utils/format';
 
 export const useProductManagement = () => {
   const [products, setProducts] = useState([]);
@@ -122,9 +121,6 @@ export const useProductManagement = () => {
         original_price: productData.originalPrice || null
       };
 
-      if (!payload.slug) {
-        payload.slug = generateSlug(payload.name);
-      }
 
       if (editingProduct?.id) {
         // Cập nhật

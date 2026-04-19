@@ -41,19 +41,3 @@ export const formatDate = (dateString) => {
   return date.toLocaleDateString('vi-VN');
 };
 
-/**
- * Tạo đường dẫn thân thiện từ chuỗi văn bản (ví dụ: "Sản phẩm A" -> "san-pham-a")
- * @param {string} text 
- * @returns {string}
- */
-export const generateSlug = (text) => {
-  if (!text) return '';
-  return text
-    .toString()
-    .normalize('NFD') // Chuẩn hóa Unicode để tách dấu
-    .replace(/[\u0300-\u036f]/g, '') // Loại bỏ dấu (cho tiếng Việt)
-    .toLowerCase()
-    .trim()
-    .replace(/[\s\W-]+/g, '-') // Thay thế khoảng trắng và ký tự đặc biệt bằng gạch ngang
-    .replace(/^-+|-+$/g, ''); // Loại bỏ gạch ngang thừa ở đầu/cuối
-};

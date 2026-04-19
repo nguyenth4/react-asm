@@ -1,6 +1,5 @@
 const connection = require('../database');
 const { DataTypes } = require('sequelize');
-const slugify = require('../utils/slugify');
 
 const Category = connection.define('Category', {
     id: {
@@ -23,11 +22,6 @@ const Category = connection.define('Category', {
     product_count: {
         type: DataTypes.INTEGER,
         defaultValue: 0
-    },
-    slug: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true
     }
 }, {
     tableName: 'categories',
@@ -36,10 +30,5 @@ const Category = connection.define('Category', {
     updatedAt: false
 });
 
-Category.beforeValidate((category) => {
-    if (category.name && !category.slug) {
-        category.slug = slugify(category.name);
-    }
-});
 
 module.exports = Category;

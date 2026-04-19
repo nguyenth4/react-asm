@@ -38,7 +38,6 @@ const productsData = [
     {
         name: 'Lipstick Matte Ruby Woo',
         brand: 'MAC Cosmetics',
-        slug: 'lipstick-matte-ruby-woo',
         price: 480000,
         price_sale: 600000,
         stock: 50,
@@ -50,7 +49,6 @@ const productsData = [
     {
         name: 'Rouge Dior Satin 999',
         brand: 'Dior Beauty',
-        slug: 'rouge-dior-satin-999',
         price: 1250000,
         stock: 20,
         status: 'active',
@@ -61,7 +59,6 @@ const productsData = [
     {
         name: 'NARS Radiant Creamy Concealer',
         brand: 'NARS',
-        slug: 'nars-radiant-creamy-concealer',
         price: 750000,
         stock: 35,
         status: 'active',

@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import categoryService from '../../../../shared/services/categoryService';
-import { generateSlug } from '../../../../shared/utils/format';
 
 export const useCategoryManagement = () => {
   const [categories, setCategories] = useState([]);
@@ -73,7 +72,6 @@ export const useCategoryManagement = () => {
     try {
       const payload = {
         name: catData.name,
-        slug: catData.slug || generateSlug(catData.name),
         status: catData.status ? 'active' : 'hidden'
       };
 

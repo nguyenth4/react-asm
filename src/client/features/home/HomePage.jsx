@@ -36,12 +36,12 @@ const HomePage = ({ initialProducts, onProductsUpdate, onShopClick, onProductCli
     fetchProducts();
   }, [selectedCategory]);
 
-  const handleCategorySelect = (slug) => {
+  const handleCategorySelect = (id) => {
     // If clicking the same category, deselect it (toggle behavior)
-    if (selectedCategory === slug) {
+    if (selectedCategory === id) {
       setSelectedCategory('all');
     } else {
-      setSelectedCategory(slug);
+      setSelectedCategory(id);
     }
   };
 

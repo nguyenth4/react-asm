@@ -1,7 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../database');
 const Category = require('./category');
-const slugify = require('../utils/slugify');
 
 const Product = sequelize.define('Product', {
     id: {
@@ -20,15 +19,6 @@ const Product = sequelize.define('Product', {
     brand: {
         type: DataTypes.STRING,
         allowNull: true
-    },
-    slug: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: { msg: 'Đường dẫn (slug) đã tồn tại' },
-        validate: {
-            notEmpty: { msg: 'Slug không được để trống' },
-            notNull: { msg: 'Slug không được để trống' }
-        }
     },
     price: {
         type: DataTypes.DECIMAL(15, 2),
@@ -95,11 +85,5 @@ const Product = sequelize.define('Product', {
 // Thiết lập quan hệ
 Product.belongsTo(Category, { foreignKey: 'category_id' });
 Category.hasMany(Product, { foreignKey: 'category_id' });
-
-Product.beforeValidate((product) => {
-    if (product.name && !product.slug) {
-        product.slug = slugify(product.name);
-    }
-});
 
 module.exports = Product;
