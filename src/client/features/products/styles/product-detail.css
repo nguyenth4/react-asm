@@ -233,6 +233,7 @@
   background: transparent;
   outline: none;
   -moz-appearance: textfield;
+  appearance: textfield;
 }
 
 .quantity-selector input::-webkit-outer-spin-button,

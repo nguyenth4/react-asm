@@ -31,13 +31,17 @@ const ProductsPage = ({ initialProducts, onProductsUpdate, onProductClick, onAdd
         // Chỉ hiện loading nếu danh sách rỗng
         if (products.length === 0) setLoading(true);
         
-        const params = selectedCategory !== 'all' ? { category: selectedCategory } : {};
+        const params = { status: 'active' };
+        if (selectedCategory !== 'all') {
+            params.category = selectedCategory;
+        }
         const data = await productService.getAllProducts(params);
+        const activeData = data.filter(p => p.status === 'active');
         
-        setProducts(data);
+        setProducts(activeData);
         // Đồng bộ ngược lại App.js
         if (selectedCategory === 'all' && onProductsUpdate) {
-          onProductsUpdate(data);
+          onProductsUpdate(activeData);
         }
         
         setLoading(false);

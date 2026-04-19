@@ -16,6 +16,10 @@ class ProductController {
                 whereClause.brand = brand;
             }
 
+            if (req.query.status) {
+                whereClause.status = req.query.status;
+            }
+
             // Xử lý lọc giá (ví dụ)
             // if (min_price || max_price) { ... }
 

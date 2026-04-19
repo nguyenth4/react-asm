@@ -311,7 +311,7 @@
   flex-shrink: 0;
 }
 .activity-item__title { font-size: 13.5px; color: var(--text-dark); }
-.activity-item__time { font-size: 11px; color: var(--text-soft); marginTop: 3px; }
+.activity-item__time { font-size: 11px; color: var(--text-soft); margin-top: 3px; }
 .stat-card__change.down { color: var(--red, #EF4444); }
 
 /* --- Stats Row & Strips (Improved Layouts) --- */
@@ -725,6 +725,11 @@ select.fsel {
   margin-bottom: 24px;
   cursor: pointer;
   transition: all 0.2s;
+  min-height: 250px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .img-upload:hover {

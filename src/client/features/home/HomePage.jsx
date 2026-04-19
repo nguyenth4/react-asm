@@ -18,13 +18,17 @@ const HomePage = ({ initialProducts, onProductsUpdate, onShopClick, onProductCli
         // Chỉ hiện loading nếu chưa có dữ liệu gì
         if (products.length === 0) setLoading(true);
         
-        const params = selectedCategory !== 'all' ? { category: selectedCategory } : {};
+        const params = { status: 'active' };
+        if (selectedCategory !== 'all') {
+            params.category = selectedCategory;
+        }
         const data = await productService.getAllProducts(params);
+        const activeData = data.filter(p => p.status === 'active');
         
-        setProducts(data);
+        setProducts(activeData);
         // Đồng bộ ngược lại App.js nếu đang ở chế độ "all"
         if (selectedCategory === 'all' && onProductsUpdate) {
-          onProductsUpdate(data);
+          onProductsUpdate(activeData);
         }
         
         setLoading(false);

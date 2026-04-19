@@ -225,6 +225,7 @@
 
 .qty-input-small {
   -moz-appearance: textfield;
+  appearance: textfield;
 }
 
 /* ── CART ITEM RIGHT ── */
