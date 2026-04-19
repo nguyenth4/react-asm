@@ -67,6 +67,9 @@ class ProductController {
             res.status(201).json({ status: 201, message: 'Thêm sản phẩm thành công', data: product });
         } catch (error) {
             console.error('Error creating product:', error);
+            if (error.name === 'SequelizeUniqueConstraintError') {
+                return res.status(400).json({ error: 'Tên sản phẩm này đã tồn tại' });
+            }
             const message = error.errors ? error.errors.map(e => e.message).join(', ') : error.message;
             res.status(500).json({ error: message });
         }
@@ -83,6 +86,9 @@ class ProductController {
             res.status(200).json({ status: 200, message: 'Cập nhật thành công', data: product });
         } catch (error) {
             console.error('Error updating product:', error);
+            if (error.name === 'SequelizeUniqueConstraintError') {
+                return res.status(400).json({ error: 'Tên sản phẩm này đã tồn tại' });
+            }
             const message = error.errors ? error.errors.map(e => e.message).join(', ') : error.message;
             res.status(500).json({ error: message });
         }

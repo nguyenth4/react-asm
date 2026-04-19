@@ -11,6 +11,7 @@ const Product = sequelize.define('Product', {
     name: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique: { msg: 'Tên sản phẩm này đã tồn tại' },
         validate: {
             notEmpty: { msg: 'Tên sản phẩm không được để trống' },
             notNull: { msg: 'Tên sản phẩm không được để trống' }
