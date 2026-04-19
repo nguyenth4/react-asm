@@ -1,6 +1,7 @@
 const ProductModel = require('../models/product');
 const CategoryModel = require('../models/category');
 const OrderItemModel = require('../models/orderItem');
+const slugify = require('../utils/slugify');
 
 class ProductController {
     static async list(req, res) {
@@ -65,7 +66,11 @@ class ProductController {
 
     static async create(req, res) {
         try {
-            const product = await ProductModel.create(req.body);
+            const productData = { ...req.body };
+            if (!productData.slug && productData.name) {
+                productData.slug = slugify(productData.name);
+            }
+            const product = await ProductModel.create(productData);
             res.status(201).json({ status: 201, message: 'Thêm sản phẩm thành công', data: product });
         } catch (error) {
             console.error('Error creating product:', error);
@@ -78,7 +83,13 @@ class ProductController {
         try {
             const product = await ProductModel.findByPk(req.params.id);
             if (!product) return res.status(404).json({ message: 'Không tìm thấy sản phẩm' });
-            await product.update(req.body);
+            
+            const updateData = { ...req.body };
+            if (updateData.name && !updateData.slug) {
+                updateData.slug = slugify(updateData.name);
+            }
+            
+            await product.update(updateData);
             res.status(200).json({ status: 200, message: 'Cập nhật thành công', data: product });
         } catch (error) {
             console.error('Error updating product:', error);

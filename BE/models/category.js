@@ -1,5 +1,6 @@
 const connection = require('../database');
 const { DataTypes } = require('sequelize');
+const slugify = require('../utils/slugify');
 
 const Category = connection.define('Category', {
     id: {
@@ -33,6 +34,12 @@ const Category = connection.define('Category', {
     timestamps: true,
     createdAt: 'created_at',
     updatedAt: false
+});
+
+Category.beforeValidate((category) => {
+    if (category.name && !category.slug) {
+        category.slug = slugify(category.name);
+    }
 });
 
 module.exports = Category;

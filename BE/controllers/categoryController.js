@@ -1,5 +1,6 @@
 const CategoryModel = require('../models/category');
 const ProductModel = require('../models/product');
+const slugify = require('../utils/slugify');
 
 class CategoryController {
 
@@ -40,8 +41,15 @@ class CategoryController {
 
     static async create(req, res) {
         try {
-            const { name, icon, description, product_count } = req.body;
-            const category = await CategoryModel.create({ name, icon, description, product_count });
+            const { name, icon, description, product_count, slug } = req.body;
+            const categoryData = { 
+                name, 
+                icon, 
+                description, 
+                product_count,
+                slug: slug || (name ? slugify(name) : undefined)
+            };
+            const category = await CategoryModel.create(categoryData);
 
             res.status(201).json({
                 message: "Thêm mới thành công",
@@ -57,14 +65,20 @@ class CategoryController {
     static async update(req, res) {
         try {
             const { id } = req.params;
-            const { name, icon, description, product_count } = req.body;
+            const { name, icon, description, product_count, slug } = req.body;
 
             const category = await CategoryModel.findByPk(id);
             if (!category) {
                 return res.status(404).json({ message: "Id không tồn tại" });
             }
 
-            category.name = name || category.name;
+            if (name) {
+                category.name = name;
+                if (!slug) {
+                    category.slug = slugify(name);
+                }
+            }
+            if (slug !== undefined) category.slug = slug;
             if (icon !== undefined) category.icon = icon;
             if (description !== undefined) category.description = description;
             if (product_count !== undefined) category.product_count = product_count;
