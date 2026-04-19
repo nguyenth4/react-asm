@@ -35,14 +35,9 @@ const OrderTable = ({ orders, onSelectOrder, getStatusLabel, getStatusClass }) =
                   </span>
                 </td>
                 <td>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '9px' }}>
-                    <div className="cust-av" style={{ background: '#3b82f6' }}>
-                      {o.customerName.charAt(0)}
-                    </div>
-                    <div>
-                      <div className="cust-name">{o.customerName}</div>
-                      <div className="cust-phone">{o.phone}</div>
-                    </div>
+                  <div>
+                    <div className="cust-name">{o.customerName}</div>
+                    <div className="cust-phone">{o.phone}</div>
                   </div>
                 </td>
                 <td style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{(o.items || []).join(', ')}</td>
@@ -58,9 +53,6 @@ const OrderTable = ({ orders, onSelectOrder, getStatusLabel, getStatusClass }) =
                   <div className="action-btns">
                     <div className="abt view" onClick={() => onSelectOrder(o)} title="Chi tiết">
                       <i className="bi bi-eye"></i>
-                    </div>
-                    <div className="abt edit-btn" title="Sửa">
-                      <i className="bi bi-pencil"></i>
                     </div>
                   </div>
                 </td>
