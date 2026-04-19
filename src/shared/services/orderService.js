@@ -39,6 +39,16 @@ const orderService = {
       console.error(`Error updating order status for id ${id}:`, error);
       throw error;
     }
+  },
+
+  getMyOrders: async (userId) => {
+    try {
+      const response = await axiosInstance.get(`/orders/my/${userId}`);
+      return response.data.data;
+    } catch (error) {
+      console.error(`Error fetching orders for user ${userId}:`, error);
+      throw error;
+    }
   }
 };
 

@@ -76,6 +76,21 @@ class OrderController {
         }
     }
 
+    static async getByUser(req, res) {
+        try {
+            const orders = await Order.findAll({
+                where: { user_id: req.params.userId },
+                include: [{ model: OrderItem, include: [Product] }],
+                order: [['created_at', 'DESC']]
+            });
+            res.status(200).json({ status: 200, data: orders });
+        } catch (error) {
+            console.error('Error fetching orders by user:', error);
+            const message = error.errors ? error.errors.map(e => e.message).join(', ') : error.message;
+            res.status(500).json({ error: message });
+        }
+    }
+
     static async updateStatus(req, res) {
         try {
             const { status } = req.body;

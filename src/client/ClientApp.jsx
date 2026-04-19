@@ -8,6 +8,7 @@ import CartPage from './features/cart/CartPage';
 import CheckoutPage from './features/checkout/CheckoutPage';
 import LoginPage from './features/auth/LoginPage';
 import RegisterPage from './features/auth/RegisterPage';
+import OrderHistoryPage from './features/orders/OrderHistoryPage';
 
 const ClientApp = ({ 
   currentPage, 
@@ -83,6 +84,8 @@ const ClientApp = ({
         return <LoginPage onNavigate={onNavigate} onLoginSuccess={onLoginSuccess} />;
       case 'register':
         return <RegisterPage onNavigate={onNavigate} />;
+      case 'orders':
+        return <OrderHistoryPage user={user} onNavigate={onNavigate} />;
       default:
         return (
           <HomePage
