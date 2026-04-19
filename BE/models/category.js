@@ -23,6 +23,10 @@ const Category = connection.define('Category', {
     product_count: {
         type: DataTypes.INTEGER,
         defaultValue: 0
+    },
+    status: {
+        type: DataTypes.ENUM('active', 'hidden'),
+        defaultValue: 'active'
     }
 }, {
     tableName: 'categories',

@@ -1,6 +1,7 @@
 const CategoryModel = require('../models/category');
 const ProductModel = require('../models/product');
 const sequelize = require('../database');
+const { Op } = require('sequelize');
 
 class CategoryController {
 
@@ -8,7 +9,7 @@ class CategoryController {
         try {
             const categories = await CategoryModel.findAll({
                 attributes: [
-                    'id', 'name', 'icon', 'description', 
+                    'id', 'name', 'icon', 'description', 'status',
                     [sequelize.literal('(SELECT COUNT(*) FROM products WHERE products.category_id = Category.id)'), 'product_count'],
                     'created_at'
                 ]
@@ -30,7 +31,7 @@ class CategoryController {
             const { id } = req.params;
             const category = await CategoryModel.findByPk(id, {
                 attributes: [
-                    'id', 'name', 'icon', 'description', 
+                    'id', 'name', 'icon', 'description', 'status',
                     [sequelize.literal('(SELECT COUNT(*) FROM products WHERE products.category_id = Category.id)'), 'product_count'],
                     'created_at'
                 ]
@@ -53,11 +54,27 @@ class CategoryController {
 
     static async create(req, res) {
         try {
-            const { name, icon, description, product_count } = req.body;
+            const { name, icon, description, status, product_count } = req.body;
+            
+            if (!name || name.trim() === "") {
+                return res.status(400).json({ error: 'Tên danh mục không được để trống' });
+            }
+
+            // Normalize: trim and replace multiple spaces with a single space
+            const normalizedName = name.trim().replace(/\s+/g, ' ');
+            const existing = await CategoryModel.findOne({ 
+                where: { name: normalizedName } 
+            });
+
+            if (existing) {
+                return res.status(400).json({ error: 'Tên danh mục này đã tồn tại' });
+            }
+
             const categoryData = { 
-                name, 
+                name: normalizedName, 
                 icon, 
                 description, 
+                status: status || 'active',
                 product_count: 0 // Resetting to 0 as it will be calculated
             };
             const category = await CategoryModel.create(categoryData);
@@ -79,20 +96,39 @@ class CategoryController {
     static async update(req, res) {
         try {
             const { id } = req.params;
-            const { name, icon, description, product_count } = req.body;
+            const { name, icon, description, status, product_count } = req.body;
 
             const category = await CategoryModel.findByPk(id, {
-                attributes: ['id', 'name', 'icon', 'description', 'product_count', 'created_at']
+                attributes: ['id', 'name', 'icon', 'description', 'status', 'product_count', 'created_at']
             });
             if (!category) {
                 return res.status(404).json({ message: "Id không tồn tại" });
             }
 
             if (name) {
-                category.name = name;
+                if (name.trim() === "") {
+                    return res.status(400).json({ error: 'Tên danh mục không được để trống' });
+                }
+
+                // Normalize: trim and replace multiple spaces with a single space
+                const normalizedName = name.trim().replace(/\s+/g, ' ');
+
+                // Check for duplicate name excluding current category
+                const existing = await CategoryModel.findOne({
+                    where: {
+                        name: normalizedName,
+                        id: { [Op.ne]: id }
+                    }
+                });
+
+                if (existing) {
+                    return res.status(400).json({ error: 'Tên danh mục này đã tồn tại' });
+                }
+                category.name = normalizedName;
             }
             if (icon !== undefined) category.icon = icon;
             if (description !== undefined) category.description = description;
+            if (status !== undefined) category.status = status;
             if (product_count !== undefined) category.product_count = product_count;
 
             await category.save();
