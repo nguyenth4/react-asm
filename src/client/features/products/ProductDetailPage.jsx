@@ -3,7 +3,7 @@ import { formatCurrency } from '../../../shared/utils/format';
 import productService from '../../../shared/services/productService';
 import './styles/product-detail.css';
 
-const ProductDetailPage = ({ productId, initialData, onBack, onAddToCart }) => {
+const ProductDetailPage = ({ productId, initialData, onBack, onAddToCart, user }) => {
   // Rely on the central mapper in productService
   const mapProductData = (data) => data;
 
@@ -146,36 +146,49 @@ const ProductDetailPage = ({ productId, initialData, onBack, onAddToCart }) => {
             {product.description}
           </p>
 
-          <div className="product-actions-group">
-            <div className="quantity-row">
-              <span className="qty-label">Số lượng:</span>
-              <div className="quantity-selector">
-                <button onClick={handleDecrease} className="btn-qty">-</button>
-                <input 
-                  type="number" 
-                  value={quantity} 
-                  onChange={handleQuantityChange}
-                  min="1"
-                  max={product.stock || 1000}
-                />
-                <button onClick={handleIncrease} className="btn-qty">+</button>
+          {user && (user.role === 'admin' || user.role === 1) ? (
+            <div className="admin-restriction-message" style={{ 
+              padding: '15px', 
+              background: '#fff5f5', 
+              border: '1px solid #feb2b2', 
+              borderRadius: '8px',
+              color: '#c53030',
+              marginTop: '20px'
+            }}>
+              <i className="bi bi-info-circle-fill" style={{ marginRight: '8px' }}></i>
+              Tài khoản Quản trị viên không thể thực hiện mua sắm.
+            </div>
+          ) : (
+            <div className="product-actions-group">
+              <div className="quantity-row">
+                <span className="qty-label">Số lượng:</span>
+                <div className="quantity-selector">
+                  <button onClick={handleDecrease} className="btn-qty">-</button>
+                  <input 
+                    type="number" 
+                    value={quantity} 
+                    onChange={handleQuantityChange}
+                    min="1"
+                    max={product.stock || 1000}
+                  />
+                  <button onClick={handleIncrease} className="btn-qty">+</button>
+                </div>
+                <span className="stock-info">Còn {product.stock || 46} sản phẩm</span>
               </div>
-              <span className="stock-info">Còn {product.stock || 46} sản phẩm</span>
-            </div>
 
-            <div className="main-actions">
-              <button className="btn-add-cart-alt" onClick={handleAddToCart}>
-                <i className="bi bi-cart-plus"></i> THÊM VÀO GIỎ
-              </button>
-              <button className="btn-buy-now" onClick={() => alert('Chức năng mua ngay đang phát triển')}>
-                MUA NGAY
-              </button>
-              <button className="btn-action-icon">
-                <i className="bi bi-share"></i>
-              </button>
+              <div className="main-actions">
+                <button className="btn-add-cart-alt" onClick={handleAddToCart}>
+                  <i className="bi bi-cart-plus"></i> THÊM VÀO GIỎ
+                </button>
+                <button className="btn-buy-now" onClick={() => alert('Chức năng mua ngay đang phát triển')}>
+                  MUA NGAY
+                </button>
+                <button className="btn-action-icon">
+                  <i className="bi bi-share"></i>
+                </button>
+              </div>
             </div>
-          </div>
-
+          )}
           <div className="product-perks">
             <div className="perk">
               <span className="perk-icon"><i className="bi bi-truck"></i></span>

@@ -133,6 +133,11 @@ function App() {
       navigateTo('login');
       return;
     }
+
+    if (user.role === 'admin' || user.role === 1) {
+      alert('Tài khoản Quản trị viên không thể thực hiện mua sắm!');
+      return;
+    }
     setCartItems((prev) => {
       const existing = prev.find((item) => item.id === product.id);
       
@@ -203,11 +208,19 @@ function App() {
     } else if (page === 'products') {
       targetPath = '/products';
     } else if (page === 'cart') {
+      if (user && user.role === 'admin') {
+        alert('Tài khoản Quản trị viên không thể truy cập giỏ hàng!');
+        return;
+      }
       targetPath = '/cart';
     } else if (page === 'checkout') {
       if (!user) {
         alert('Vui lòng đăng nhập để tiến hành thanh toán!');
         navigateTo('login');
+        return;
+      }
+      if (user.role === 'admin') {
+        alert('Tài khoản Quản trị viên không thể thực hiện thanh toán!');
         return;
       }
       targetPath = '/checkout';

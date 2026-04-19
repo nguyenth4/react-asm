@@ -5,9 +5,13 @@ const sequelize = require('../database');
 
 class OrderController {
     static async create(req, res) {
+        if (req.user && (req.user.role === 'admin' || req.user.role === 1)) {
+            return res.status(403).json({ error: 'Tài khoản Quản trị viên không được phép đặt hàng.' });
+        }
         const transaction = await sequelize.transaction();
         try {
-            const { user_id, items, total_price, shipping_address, payment_method, customer_name, phone } = req.body;
+            const { items, total_price, shipping_address, payment_method, customer_name, phone } = req.body;
+            const user_id = req.user.id; // Lấy từ token thay vì body để bảo mật hơn
 
             const order = await Order.create({
                 user_id,

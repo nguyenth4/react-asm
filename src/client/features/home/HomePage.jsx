@@ -7,7 +7,7 @@ import Newsletter from './components/Newsletter';
 import productService from '../../../shared/services/productService';
 import './styles/home.css';
 
-const HomePage = ({ initialProducts, onProductsUpdate, onShopClick, onProductClick, onAddToCart }) => {
+const HomePage = ({ initialProducts, onProductsUpdate, onShopClick, onProductClick, onAddToCart, user }) => {
   const [products, setProducts] = useState(initialProducts || []);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [loading, setLoading] = useState(products.length === 0);
@@ -62,6 +62,7 @@ const HomePage = ({ initialProducts, onProductsUpdate, onShopClick, onProductCli
           onSeeAllClick={onShopClick}
           selectedCategory={selectedCategory}
           onAddToCart={onAddToCart}
+          user={user}
         />
       )}
       <SaleBanner onShopClick={onShopClick} />

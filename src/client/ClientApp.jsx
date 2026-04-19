@@ -37,6 +37,7 @@ const ClientApp = ({
             onShopClick={() => onNavigate('products')}
             onProductClick={(id, data) => onNavigate('detail', id, data)}
             onAddToCart={addToCart}
+            user={user}
           />
         );
       case 'products':
@@ -46,6 +47,7 @@ const ClientApp = ({
             onProductsUpdate={onProductsUpdate}
             onProductClick={(id, data) => onNavigate('detail', id, data)}
             onAddToCart={addToCart}
+            user={user}
           />
         );
       case 'detail':
@@ -55,6 +57,7 @@ const ClientApp = ({
             initialData={selectedProductData}
             onBack={() => onNavigate('products')}
             onAddToCart={addToCart}
+            user={user}
           />
         );
       case 'cart':
@@ -86,6 +89,7 @@ const ClientApp = ({
             onShopClick={() => onNavigate('products')}
             onProductClick={(id) => onNavigate('detail', id)}
             onAddToCart={addToCart}
+            user={user}
           />
         );
     }

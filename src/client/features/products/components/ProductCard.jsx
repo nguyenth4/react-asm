@@ -1,7 +1,7 @@
 import React from 'react';
 import { formatCurrency } from '../../../../shared/utils/format';
 
-const ProductCard = ({ product, onClick, onAddToCart }) => {
+const ProductCard = ({ product, onClick, onAddToCart, user }) => {
   const { name, category, price, oldPrice, image, isNew, isSale } = product;
   
   return (
@@ -25,16 +25,18 @@ const ProductCard = ({ product, onClick, onAddToCart }) => {
           )}
         </div>
         
-        <button 
-          className="btn-add-cart" 
-          onClick={(e) => {
-            e.stopPropagation();
-            if (onAddToCart) onAddToCart(product);
-          }}
-        >
-          <i className="bi bi-bag-plus" style={{ fontSize: '1.1rem' }}></i>
-          Thêm vào giỏ
-        </button>
+        {(!user || (user.role !== 'admin' && user.role !== 1)) && (
+          <button 
+            className="btn-add-cart" 
+            onClick={(e) => {
+              e.stopPropagation();
+              if (onAddToCart) onAddToCart(product);
+            }}
+          >
+            <i className="bi bi-bag-plus" style={{ fontSize: '1.1rem' }}></i>
+            Thêm vào giỏ
+          </button>
+        )}
       </div>
     </div>
   );

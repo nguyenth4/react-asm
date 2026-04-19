@@ -6,7 +6,7 @@ import './styles/products.css';
 import productService from '../../../shared/services/productService';
 import categoryService from '../../../shared/services/categoryService';
 
-const ProductsPage = ({ initialProducts, onProductsUpdate, onProductClick, onAddToCart }) => {
+const ProductsPage = ({ initialProducts, onProductsUpdate, onProductClick, onAddToCart, user }) => {
   const [products, setProducts] = useState(initialProducts || []);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -74,7 +74,7 @@ const ProductsPage = ({ initialProducts, onProductsUpdate, onProductClick, onAdd
           <span className="products-count">{products.length} sản phẩm</span>
         </div>
         
-        <ProductList products={products} onProductClick={onProductClick} onAddToCart={onAddToCart} />
+        <ProductList products={products} onProductClick={onProductClick} onAddToCart={onAddToCart} user={user} />
       </main>
     </div>
   );

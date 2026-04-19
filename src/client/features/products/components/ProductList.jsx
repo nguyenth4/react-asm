@@ -1,7 +1,7 @@
 import React from 'react';
 import ProductCard from './ProductCard';
 
-const ProductList = ({ products, onProductClick, onAddToCart }) => {
+const ProductList = ({ products, onProductClick, onAddToCart, user }) => {
   return (
     <div className="product-grid">
       {products.map(product => (
@@ -10,6 +10,7 @@ const ProductList = ({ products, onProductClick, onAddToCart }) => {
           product={product}
           onClick={() => onProductClick(product.id, product)}
           onAddToCart={onAddToCart}
+          user={user}
         />
       ))}
     </div>

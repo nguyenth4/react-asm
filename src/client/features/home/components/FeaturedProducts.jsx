@@ -1,7 +1,7 @@
 import React from 'react';
 import ProductCard from '../../products/components/ProductCard';
 
-const FeaturedProducts = ({ products, onProductClick, onSeeAllClick, selectedCategory, onAddToCart }) => {
+const FeaturedProducts = ({ products, onProductClick, onSeeAllClick, selectedCategory, onAddToCart, user }) => {
   // If a category is selected, show more products, otherwise limit to 8 for featured section
   const displayLimit = selectedCategory !== 'all' ? products.length : 8;
   const displayProducts = products.slice(0, displayLimit);
@@ -29,6 +29,7 @@ const FeaturedProducts = ({ products, onProductClick, onSeeAllClick, selectedCat
             product={product} 
             onClick={() => onProductClick(product.id, product)}
             onAddToCart={onAddToCart}
+            user={user}
           />
         ))}
       </div>
