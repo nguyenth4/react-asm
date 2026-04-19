@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ClientApp from './client/ClientApp';
 import AdminApp from './admin/AdminApp';
 import './index.css';
@@ -111,7 +111,20 @@ function App() {
   const [selectedProductId, setSelectedProductId] = useState(null);
   const [selectedProductData, setSelectedProductData] = useState(null);
   const [globalProducts, setGlobalProducts] = useState([]);
-  const [cartItems, setCartItems] = useState([]);
+  const [cartItems, setCartItems] = useState(() => {
+    try {
+      const saved = localStorage.getItem('bb_cart');
+      if (saved === null || saved === 'undefined') return [];
+      return JSON.parse(saved);
+    } catch {
+      return [];
+    }
+  });
+
+  // Persist cart to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('bb_cart', JSON.stringify(cartItems));
+  }, [cartItems]);
 
   // ── Cart logic ──────────────────────────────────────────
   const addToCart = (product, qty = 1) => {
@@ -220,6 +233,7 @@ function App() {
 
   const clearCart = () => {
     setCartItems([]);
+    localStorage.removeItem('bb_cart');
   };
 
   return (
