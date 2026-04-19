@@ -15,9 +15,9 @@ function App() {
     }
   });
 
-  const isAdmin = () => {
+  /* const isAdmin = () => {
     return user && user.role === 'admin';
-  };
+  }; */
 
   const handleLogout = () => {
     localStorage.removeItem('bb_user');

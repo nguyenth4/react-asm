@@ -205,12 +205,26 @@
   background: var(--pink-100);
 }
 
-.qty-val {
+.qty-val, .qty-input-small {
   width: 32px;
   text-align: center;
   font-size: 13px;
   font-weight: 600;
   color: var(--text-dark);
+  border: none;
+  background: transparent;
+  outline: none;
+  font-family: inherit;
+}
+
+.qty-input-small::-webkit-inner-spin-button,
+.qty-input-small::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.qty-input-small {
+  -moz-appearance: textfield;
 }
 
 /* ── CART ITEM RIGHT ── */

@@ -23,7 +23,22 @@ const CartItem = ({ item, onUpdateQty, onRemove }) => {
           >
             −
           </button>
-          <span className="qty-val">{qty}</span>
+          <input
+            type="number"
+            className="qty-input-small"
+            value={qty}
+            onChange={(e) => {
+              const val = parseInt(e.target.value);
+              if (!isNaN(val) && val >= 1) {
+                onUpdateQty(id, val);
+              }
+            }}
+            onBlur={(e) => {
+               const val = parseInt(e.target.value);
+               if (isNaN(val) || val < 1) onUpdateQty(id, 1);
+            }}
+            min="1"
+          />
           <button
             id={`qty-increase-${id}`}
             className="qty-btn"

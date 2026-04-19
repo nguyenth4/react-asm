@@ -61,7 +61,26 @@ const ProductDetailPage = ({ productId, initialData, onBack, onAddToCart }) => {
   };
 
   const handleIncrease = () => {
-    setQuantity(prev => prev + 1);
+    const maxStock = product.stock || 1000;
+    if (quantity < maxStock) {
+      setQuantity(prev => prev + 1);
+    } else {
+      alert(`Chỉ còn ${maxStock} sản phẩm trong kho`);
+    }
+  };
+
+  const handleQuantityChange = (e) => {
+    const val = parseInt(e.target.value);
+    const maxStock = product.stock || 1000;
+    
+    if (isNaN(val) || val < 1) {
+      setQuantity(1);
+    } else if (val > maxStock) {
+       alert(`Không thể vượt quá số lượng tồn kho (Còn ${maxStock} sản phẩm)`);
+       setQuantity(maxStock);
+    } else {
+      setQuantity(val);
+    }
   };
 
   if (loading) return <div className="product-detail-loading">Đang tải thông tin sản phẩm...</div>;
@@ -132,7 +151,13 @@ const ProductDetailPage = ({ productId, initialData, onBack, onAddToCart }) => {
               <span className="qty-label">Số lượng:</span>
               <div className="quantity-selector">
                 <button onClick={handleDecrease} className="btn-qty">-</button>
-                <input type="number" value={quantity} readOnly />
+                <input 
+                  type="number" 
+                  value={quantity} 
+                  onChange={handleQuantityChange}
+                  min="1"
+                  max={product.stock || 1000}
+                />
                 <button onClick={handleIncrease} className="btn-qty">+</button>
               </div>
               <span className="stock-info">Còn {product.stock || 46} sản phẩm</span>
