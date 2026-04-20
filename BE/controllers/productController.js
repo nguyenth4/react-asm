@@ -72,16 +72,12 @@ class ProductController {
         try {
             const productData = { ...req.body };
             if (req.file) {
-                const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-                const filename = uniqueSuffix + '.webp';
-                const uploadDir = path.join(__dirname, '../public/uploads');
-                
-                await sharp(req.file.buffer)
+                const buffer = await sharp(req.file.buffer)
                     .resize({ width: 800, withoutEnlargement: true })
                     .webp({ quality: 80 })
-                    .toFile(path.join(uploadDir, filename));
+                    .toBuffer();
                     
-                productData.image = `http://localhost:3000/uploads/${filename}`;
+                productData.image = `data:image/webp;base64,${buffer.toString('base64')}`;
             }
             const product = await ProductModel.create(productData);
             res.status(201).json({ status: 201, message: 'Thêm sản phẩm thành công', data: product });
@@ -102,16 +98,12 @@ class ProductController {
             
             const updateData = { ...req.body };
             if (req.file) {
-                const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-                const filename = uniqueSuffix + '.webp';
-                const uploadDir = path.join(__dirname, '../public/uploads');
-                
-                await sharp(req.file.buffer)
+                const buffer = await sharp(req.file.buffer)
                     .resize({ width: 800, withoutEnlargement: true })
                     .webp({ quality: 80 })
-                    .toFile(path.join(uploadDir, filename));
+                    .toBuffer();
                     
-                updateData.image = `http://localhost:3000/uploads/${filename}`;
+                updateData.image = `data:image/webp;base64,${buffer.toString('base64')}`;
             }
             
             await product.update(updateData);
